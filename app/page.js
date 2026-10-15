@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 // One person per line, in any order: "John Tan, 560123", "560123 John Tan", or pasted from Excel (tab-separated).
 // 5-digit codes are padded: Excel drops the leading 0 from codes like 018956.
@@ -15,6 +15,9 @@ function parse(text) {
 }
 
 const mins = (s) => Math.round(s / 60);
+const plural = (n, word, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;
+const mapsUrl = (code) => `https://www.google.com/maps/search/?api=1&query=Singapore%20${code}`;
+const routeUrl = (a, b) => `https://www.google.com/maps/dir/?api=1&origin=Singapore%20${a}&destination=Singapore%20${b}&travelmode=driving`;
 
 function asText(cabs) {
   return cabs.map((cab, k) => {
@@ -33,9 +36,10 @@ export default function Page() {
   // Google results remembered while this page is open, so re-runs after small edits only pay for what's new.
   // ponytail: kept in memory only (gone on refresh). Google's terms restrict storing route results long-term.
   const cache = useRef({ geo: {}, rides: {} });
+  const parsed = useMemo(() => parse(text), [text]);
 
   async function run() {
-    const { people, skipped } = parse(text);
+    const { people, skipped } = parsed;
     if (!people.length) return setError('No postal codes found. Use one person per line, e.g. "John Tan, 560123".');
     setBusy(true); setError(''); setResult(null); setCopied(false);
     const codes = {};
@@ -59,7 +63,7 @@ export default function Page() {
         return { ...cab, stops, pax: stops.reduce((n, s) => n + s.count, 0) };
       });
       const notFound = people.filter((p) => data.notFound.includes(p.code));
-      setResult({ cabs, notFound, skipped, total: people.length, used: data.used });
+      setResult({ cabs, notFound, skipped, total: people.length, used: data.used, text });
     } catch (e) {
       setError(e.message || 'Something went wrong.');
     } finally {
@@ -72,62 +76,103 @@ export default function Page() {
     setCopied(true);
   }
 
+  const stale = result && result.text !== text;
+  const shared = result?.cabs.filter((c) => c.stops.length > 1).length ?? 0;
+
   return (
     <main>
-      <h1>Cab Pool Grouping</h1>
-      <p className="hint">
-        Paste one person per line: name and Singapore postal code. A cab takes up to 3 people from at most 2 postal codes,
-        and the two pickups must be under 15 minutes' drive apart.
-      </p>
-      <label htmlFor="list">Name and postal code list</label>
-      <textarea id="list" rows={14} value={text} onChange={(e) => setText(e.target.value)}
-        placeholder={'John Tan, 560123\nMary Lim, 560456\nAhmad Ali\t730888'} />
-      <button onClick={run} disabled={busy || !text.trim()}>{busy ? 'Grouping…' : 'Group'}</button>
+      <header>
+        <h1>REFIX Cab Pooling</h1>
+        <p className="hint">
+          Paste a guest list and get cabs to share. Each cab takes up to 3 people from at most 2 postal codes,
+          with pickups under 15 minutes' drive apart.
+        </p>
+      </header>
 
-      {error && <p className="error" role="alert">{error}</p>}
+      <div className="layout">
+        <div className="panel">
+          <label htmlFor="list">Names and postal codes</label>
+          <textarea id="list" rows={16} value={text} onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !busy && text.trim()) run(); }}
+            aria-describedby="count"
+            placeholder={'One person per line, e.g.\nJohn Tan, 560123\nMary Lim, 560456\nAhmad Ali\t730888'} />
+          <p className="count" id="count" aria-live="polite">
+            {text.trim() && <>
+              <strong>{plural(parsed.people.length, 'person', 'people')}</strong> found
+              {parsed.skipped.length > 0 && <span className="bad">, {plural(parsed.skipped.length, 'line')} without a postal code</span>}
+            </>}
+          </p>
+          <button className="go" onClick={run} disabled={busy || !parsed.people.length}>
+            {busy ? 'Grouping…' : 'Group into cabs'}<kbd aria-hidden="true">⌘↵</kbd>
+          </button>
+          {error && <p className="error" role="alert">{error}</p>}
+        </div>
 
-      {result && (
-        <section>
-          <div className="bar">
-            <h2>{result.cabs.length} cabs for {result.total - result.notFound.length} people</h2>
-            <button onClick={copy}>{copied ? 'Copied' : 'Copy for WhatsApp'}</button>
-          </div>
-          <p className="hint">Google usage this run: {result.used.lookups} postal-code lookups, {result.used.checks} drive-time checks.</p>
-
-          {result.notFound.length > 0 && (
-            <div className="warn" role="alert">
-              <strong>Postal code not found, so these people were not grouped:</strong>
-              <ul>{result.notFound.map((p, k) => <li key={k}>{p.name} - {p.code}</li>)}</ul>
+        <section aria-live="polite" aria-busy={busy}>
+          {!result && (
+            <div className="empty">
+              <p>Your cabs will appear here. Paste names with postal codes, then group them. Rows copied from Excel work too.</p>
             </div>
           )}
-          {result.skipped.length > 0 && (
-            <div className="warn">
-              <strong>Lines without a postal code (skipped):</strong>
-              <ul>{result.skipped.map((l, k) => <li key={k}>{l}</li>)}</ul>
-            </div>
-          )}
 
-          <ol className="cabs">
-            {result.cabs.map((cab, k) => (
-              <li key={k} className="cab">
-                <div className="cab-head">
-                  <strong>Cab {k + 1}</strong>
-                  <span>{cab.pax} pax</span>
-                  <span>{cab.seconds != null
-                    ? `${mins(cab.seconds)} min · ${(cab.meters / 1000).toFixed(1)} km between pickups`
-                    : cab.pax === 3 ? 'Full household' : 'No one within 15 min'}</span>
+          {result && (
+            <>
+              <div className="summary">
+                <div>
+                  <h2>{plural(result.cabs.length, 'cab')} for {plural(result.total - result.notFound.length, 'person', 'people')}</h2>
+                  <p className="hint">{shared} shared, {result.cabs.length - shared} with one pickup</p>
                 </div>
-                {cab.stops.map((s, n) => (
-                  <div key={n} className="stop">
-                    <div className="names">{s.names.join(', ')}</div>
-                    <div className="addr">{s.code} · {s.address}</div>
-                  </div>
+                <button onClick={copy}>{copied ? 'Copied' : 'Copy for WhatsApp'}</button>
+              </div>
+
+              {stale && <p className="stale">The list has changed since this grouping. Group again to update it.</p>}
+
+              {result.notFound.length > 0 && (
+                <div className="warn" role="alert">
+                  <strong>These postal codes weren't found, so these people aren't in a cab:</strong>
+                  <ul>{result.notFound.map((p, k) => <li key={k}>{p.name}, {p.code}</li>)}</ul>
+                </div>
+              )}
+              {result.skipped.length > 0 && (
+                <div className="warn">
+                  <strong>These lines have no postal code and were skipped:</strong>
+                  <ul>{result.skipped.map((l, k) => <li key={k}>{l}</li>)}</ul>
+                </div>
+              )}
+
+              <ol className="cabs">
+                {result.cabs.map((cab, k) => (
+                  <li key={k} className="cab" style={{ animationDelay: `${Math.min(k, 12) * 30}ms` }}>
+                    <div className="cab-head">
+                      <span className="plate">CAB {k + 1}</span>
+                      <span className="pax">{plural(cab.pax, 'person', 'people')}</span>
+                      {cab.stops.length > 1 && <a href={routeUrl(cab.stops[0].code, cab.stops[1].code)} target="_blank" rel="noreferrer">Route in Maps</a>}
+                    </div>
+                    <ol className="route">
+                      {cab.stops.map((s, n) => (
+                        <li key={n}>
+                          {n > 0 && <div className="leg">{mins(cab.seconds)} min drive, {(cab.meters / 1000).toFixed(1)} km</div>}
+                          <div className="stop">
+                            <div className="names">{s.names.join(', ')}</div>
+                            <div className="addr"><a href={mapsUrl(s.code)} target="_blank" rel="noreferrer">{s.address || s.code}</a></div>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                    {cab.stops.length === 1 && (
+                      <p className="alone">{cab.pax === 3 ? 'Full cab from one address.' : 'No one else within 15 minutes.'}</p>
+                    )}
+                  </li>
                 ))}
-              </li>
-            ))}
-          </ol>
+              </ol>
+
+              <p className="hint small usage">
+                Google usage this run: {plural(result.used.lookups, 'postal code lookup')}, {plural(result.used.checks, 'drive-time check')}.
+              </p>
+            </>
+          )}
         </section>
-      )}
+      </div>
     </main>
   );
 }
