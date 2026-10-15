@@ -1,14 +1,16 @@
-import { Atkinson_Hyperlegible_Next, Atkinson_Hyperlegible_Mono } from 'next/font/google';
 import './globals.css';
 
-const sans = Atkinson_Hyperlegible_Next({ subsets: ['latin'], variable: '--font-sans' });
-const mono = Atkinson_Hyperlegible_Mono({ subsets: ['latin'], variable: '--font-mono' });
-
 export const metadata = { title: 'REFIX Cab Pooling' };
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f4f3ee' },
+    { media: '(prefers-color-scheme: dark)', color: '#1f1e1d' },
+  ],
+};
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en">
       <body>
         {children}
       </body>

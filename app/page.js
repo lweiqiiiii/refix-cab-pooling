@@ -36,6 +36,7 @@ export default function Page() {
   // Google results remembered while this page is open, so re-runs after small edits only pay for what's new.
   // ponytail: kept in memory only (gone on refresh). Google's terms restrict storing route results long-term.
   const cache = useRef({ geo: {}, rides: {} });
+  const out = useRef(null);
   const parsed = useMemo(() => parse(text), [text]);
 
   async function run() {
@@ -64,6 +65,8 @@ export default function Page() {
       });
       const notFound = people.filter((p) => data.notFound.includes(p.code));
       setResult({ cabs, notFound, skipped, total: people.length, used: data.used, text });
+      // On phones the results sit below the form; bring them into view.
+      if (innerWidth < 900) out.current.scrollIntoView({ behavior: 'smooth' });
     } catch (e) {
       setError(e.message || 'Something went wrong.');
     } finally {
@@ -83,70 +86,82 @@ export default function Page() {
     <main>
       <header>
         <h1>REFIX Cab Pooling</h1>
-        <p className="hint">
-          Paste a guest list and get cabs to share. Each cab takes up to 3 people from at most 2 postal codes,
-          with pickups under 15 minutes' drive apart.
-        </p>
+        <p className="sub">Paste a guest list and get cabs to share.</p>
       </header>
 
       <div className="layout">
         <div className="panel">
-          <label htmlFor="list">Names and postal codes</label>
-          <textarea id="list" rows={16} value={text} onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !busy && text.trim()) run(); }}
-            aria-describedby="count"
-            placeholder={'One person per line, e.g.\nJohn Tan, 560123\nMary Lim, 560456\nAhmad Ali\t730888'} />
-          <p className="count" id="count" aria-live="polite">
-            {text.trim() && <>
-              <strong>{plural(parsed.people.length, 'person', 'people')}</strong> found
-              {parsed.skipped.length > 0 && <span className="bad">, {plural(parsed.skipped.length, 'line')} without a postal code</span>}
-            </>}
-          </p>
+          <label className="group-label" htmlFor="list">Names and postal codes</label>
+          <div className="panel-body">
+          <div className="group">
+            <textarea id="list" value={text} onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !busy && text.trim()) run(); }}
+              aria-describedby="count rules" spellCheck={false}
+              placeholder={'One person per line, e.g.\nJohn Tan, 560123\nMary Lim, 560456\nAhmad Ali\t730888'} />
+            <p className="count" id="count" aria-live="polite">
+              {text.trim() ? <>
+                <strong>{plural(parsed.people.length, 'person', 'people')}</strong> found
+                {parsed.skipped.length > 0 && <span className="bad">, {plural(parsed.skipped.length, 'line')} without a postal code</span>}
+              </> : 'Rows copied from Excel work too.'}
+            </p>
+          </div>
+          <p className="foot" id="rules">Up to 3 people per cab, from at most 2 postal codes under 15 minutes' drive apart.</p>
           <button className="go" onClick={run} disabled={busy || !parsed.people.length}>
             {busy ? 'Grouping…' : 'Group into cabs'}<kbd aria-hidden="true">⌘↵</kbd>
           </button>
           {error && <p className="error" role="alert">{error}</p>}
+          </div>
         </div>
 
-        <section aria-live="polite" aria-busy={busy}>
+        <section ref={out} className="out" aria-live="polite" aria-busy={busy} style={{ scrollMarginTop: 24 }}>
+          {result && (
+            <div className="summary">
+              <div>
+                <h2>{plural(result.cabs.length, 'cab')} for {plural(result.total - result.notFound.length, 'person', 'people')}</h2>
+                <p className="sub">{shared} shared, {result.cabs.length - shared} with one pickup</p>
+              </div>
+              <button className="tinted" onClick={copy}>{copied ? 'Copied' : 'Copy for WhatsApp'}</button>
+            </div>
+          )}
+          <div className="out-body">
           {!result && (
-            <div className="empty">
-              <p>Your cabs will appear here. Paste names with postal codes, then group them. Rows copied from Excel work too.</p>
+            <div className="group empty">
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 17H3v-5l2-5h14l2 5v5h-2M5 12h16" /><circle cx="7.5" cy="17" r="1.8" /><circle cx="16.5" cy="17" r="1.8" /><path d="M9.3 17h5.4" />
+                </svg>
+                <h2>No cabs yet</h2>
+                <p>Paste names with postal codes, then group them into cabs.</p>
+              </div>
             </div>
           )}
 
           {result && (
             <>
-              <div className="summary">
-                <div>
-                  <h2>{plural(result.cabs.length, 'cab')} for {plural(result.total - result.notFound.length, 'person', 'people')}</h2>
-                  <p className="hint">{shared} shared, {result.cabs.length - shared} with one pickup</p>
-                </div>
-                <button onClick={copy}>{copied ? 'Copied' : 'Copy for WhatsApp'}</button>
-              </div>
-
-              {stale && <p className="stale">The list has changed since this grouping. Group again to update it.</p>}
-
-              {result.notFound.length > 0 && (
-                <div className="warn" role="alert">
-                  <strong>These postal codes weren't found, so these people aren't in a cab:</strong>
-                  <ul>{result.notFound.map((p, k) => <li key={k}>{p.name}, {p.code}</li>)}</ul>
+              {stale && (
+                <div className="notice">
+                  The list has changed since this grouping.
+                  <button className="tinted" onClick={run} disabled={busy || !parsed.people.length}>Group again</button>
                 </div>
               )}
-              {result.skipped.length > 0 && (
-                <div className="warn">
-                  <strong>These lines have no postal code and were skipped:</strong>
-                  <ul>{result.skipped.map((l, k) => <li key={k}>{l}</li>)}</ul>
+
+              {(result.notFound.length > 0 || result.skipped.length > 0) && (
+                <div className="group issues" role="alert">
+                  <p className="issues-head">Not in a cab</p>
+                  <ul>
+                    {result.notFound.map((p, k) => <li key={`n${k}`}><span>{p.name}, {p.code}</span><span className="why">Postal code not found</span></li>)}
+                    {result.skipped.map((l, k) => <li key={`s${k}`}><span>{l}</span><span className="why">No postal code</span></li>)}
+                  </ul>
                 </div>
               )}
 
               <ol className="cabs">
                 {result.cabs.map((cab, k) => (
-                  <li key={k} className="cab" style={{ animationDelay: `${Math.min(k, 12) * 30}ms` }}>
+                  <li key={k} className="group cab" style={{ animationDelay: `${Math.min(k, 12) * 40}ms` }}>
                     <div className="cab-head">
-                      <span className="plate">CAB {k + 1}</span>
+                      <span className="num" aria-label={`Cab ${k + 1}`}>{k + 1}</span>
                       <span className="pax">{plural(cab.pax, 'person', 'people')}</span>
-                      {cab.stops.length > 1 && <a href={routeUrl(cab.stops[0].code, cab.stops[1].code)} target="_blank" rel="noreferrer">Route in Maps</a>}
+                      {cab.stops.length > 1 && <a href={routeUrl(cab.stops[0].code, cab.stops[1].code)} target="_blank" rel="noreferrer">Route</a>}
                     </div>
                     <ol className="route">
                       {cab.stops.map((s, n) => (
@@ -154,7 +169,7 @@ export default function Page() {
                           {n > 0 && <div className="leg">{mins(cab.seconds)} min drive, {(cab.meters / 1000).toFixed(1)} km</div>}
                           <div className="stop">
                             <div className="names">{s.names.join(', ')}</div>
-                            <div className="addr"><a href={mapsUrl(s.code)} target="_blank" rel="noreferrer">{s.address || s.code}</a></div>
+                            <a className="addr" href={mapsUrl(s.code)} target="_blank" rel="noreferrer">{s.address || s.code}</a>
                           </div>
                         </li>
                       ))}
@@ -166,11 +181,12 @@ export default function Page() {
                 ))}
               </ol>
 
-              <p className="hint small usage">
+              <p className="foot usage">
                 Google usage this run: {plural(result.used.lookups, 'postal code lookup')}, {plural(result.used.checks, 'drive-time check')}.
               </p>
             </>
           )}
+          </div>
         </section>
       </div>
     </main>

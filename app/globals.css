@@ -1,68 +1,111 @@
-/* Claude-style palette. --accent fills carry white text (5:1); --clay is for lines and focus rings. */
+/* Claude palette, Apple structure: grouped lists on a warm background, system type, hairline separators.
+   --tint fills carry white text (5:1); --clay is for lines, dots and focus rings. */
 :root {
-  --bg:#faf9f5; --surface:#fff; --ink:#141413; --muted:#73726c; --line:#e5e3da;
-  --accent:#b4532f; --clay:#c96442; --warn:#f8ece2; --danger:#b4361f;
+  color-scheme: light dark;
+  --bg:#f4f3ee; --surface:#fff; --ink:#141413; --muted:#6e6d68; --sep:rgba(20,20,19,.12);
+  --tint:#b4532f; --clay:#c96442; --tint-soft:rgba(201,100,66,.12); --danger:#b4361f;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg:#262624; --surface:#30302e; --ink:#faf9f5; --muted:#a6a39b; --line:#3e3e3a; --clay:#d97757; --warn:#3d2e25; --danger:#ff8f7a; }
+  :root { --bg:#1f1e1d; --surface:#2b2a27; --ink:#faf9f5; --muted:#a6a39b; --sep:rgba(250,249,245,.12);
+    --clay:#d97757; --tint-soft:rgba(217,119,87,.16); --danger:#ff8f7a; }
 }
 * { box-sizing: border-box; }
-body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 var(--font-sans), system-ui, sans-serif; }
-a { color:inherit; text-underline-offset:3px; }
-:focus-visible { outline:3px solid var(--clay); outline-offset:2px; }
+body {
+  margin:0; background:var(--bg); color:var(--ink);
+  font:17px/1.47 -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
+  letter-spacing:-.01em; -webkit-font-smoothing:antialiased;
+}
+a { color:var(--tint); text-decoration:none; }
+a:hover { text-decoration:underline; }
+@media (prefers-color-scheme: dark) { a { color:var(--clay); } }
+:focus-visible { outline:3px solid var(--clay); outline-offset:2px; border-radius:6px; }
 
-main { max-width:1120px; margin:0 auto; padding:40px 16px 64px; }
-header { max-width:62ch; margin-bottom:32px; }
-h1 { margin:0 0 8px; font-size:2.5rem; line-height:1.1; letter-spacing:-.02em; }
-h2 { margin:0; font-size:1.75rem; line-height:1.2; }
-.hint { color:var(--muted); margin:0; }
-.small { font-size:.875rem; }
+main { max-width:1080px; margin:0 auto; padding:56px 20px 72px; }
+header { margin-bottom:36px; }
+h1 { margin:0 0 6px; font-size:2.125rem; line-height:1.2; font-weight:700; letter-spacing:-.025em; }
+h2 { margin:0; font-size:1.375rem; line-height:1.25; font-weight:700; letter-spacing:-.02em; }
+.sub { color:var(--muted); margin:0; }
+.foot { color:var(--muted); font-size:.8125rem; margin:8px 16px 0; }
 
-.layout { display:grid; gap:32px; }
+.layout { display:grid; gap:40px; }
+/* Both columns share two rows (header, content) so the input card and the first result box start level. */
 @media (min-width:900px) {
-  .layout { grid-template-columns:360px 1fr; align-items:start; }
-  .panel { position:sticky; top:24px; }
+  .layout { grid-template-columns:380px 1fr; row-gap:0; }
+  .panel, .out { display:grid; grid-row:span 2; grid-template-rows:subgrid; }
+  .group-label, .summary { align-self:end; }
+  .panel-body, .out-body { grid-row:2; }
+  .panel-body { position:sticky; top:32px; align-self:start; }
 }
 
-label { display:block; font-weight:700; margin-bottom:6px; }
-textarea { width:100%; padding:12px; font:14px/1.6 var(--font-mono), ui-monospace, monospace; background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:6px; resize:vertical; }
-.count { margin:8px 0 0; font-size:.875rem; color:var(--muted); min-height:1.4em; }
-.count strong { color:var(--ink); }
+/* A grouped section: rounded white block, rows split by inset hairlines. */
+.group { background:var(--surface); border-radius:14px; overflow:hidden; }
+.group-label { display:block; margin:0 16px 8px; font-size:.8125rem; font-weight:600; color:var(--muted); }
+
+textarea {
+  display:block; width:100%; min-height:300px; padding:14px 16px; border:0; resize:vertical;
+  font:15px/1.6 ui-monospace, "SF Mono", Menlo, monospace; background:transparent; color:var(--ink);
+}
+textarea:focus-visible { outline:none; }
+.group:has(textarea:focus-visible) { box-shadow:0 0 0 3px var(--clay); }
+.count { margin:0; padding:11px 16px; border-top:.5px solid var(--sep); font-size:.9375rem; color:var(--muted); min-height:46px; }
+.count strong { color:var(--ink); font-weight:600; }
 .count .bad { color:var(--danger); }
 
-button { padding:12px 20px; font:inherit; font-weight:700; color:#fff; background:var(--accent); border:0; border-radius:6px; cursor:pointer; }
-button:disabled { opacity:.45; cursor:default; }
-.go { width:100%; margin-top:16px; }
-kbd { font:.75rem var(--font-mono), monospace; opacity:.7; margin-left:8px; }
-.error { color:var(--danger); font-weight:700; }
+button {
+  font:inherit; font-weight:600; border:0; cursor:pointer; border-radius:12px;
+  transition:transform .12s ease, opacity .12s ease;
+}
+button:active:not(:disabled) { transform:scale(.97); }
+button:disabled { opacity:.4; cursor:default; }
+.go { position:relative; width:100%; height:50px; margin-top:16px; color:#fff; background:var(--tint); }
+/* Out of the flow so the label stays centred. */
+.go kbd { position:absolute; right:16px; top:50%; transform:translateY(-50%); font:500 .8125rem system-ui, sans-serif; opacity:.65; }
+@media (pointer:coarse) { .go kbd { display:none; } }
+.tinted { padding:8px 16px; border-radius:999px; color:var(--tint); background:var(--tint-soft); font-size:.9375rem; }
+@media (prefers-color-scheme: dark) { .tinted { color:var(--clay); } }
+.error { color:var(--danger); font-size:.9375rem; margin:12px 16px 0; }
 
-.empty { border:2px dashed var(--line); border-radius:8px; padding:32px; color:var(--muted); }
-.empty p { margin:0; max-width:48ch; }
+.empty { display:grid; place-items:center; text-align:center; height:100%; min-height:360px; padding:32px; color:var(--muted); }
+.empty svg { width:44px; height:44px; color:var(--clay); margin-bottom:12px; }
+.empty h2 { color:var(--ink); font-size:1.25rem; margin-bottom:4px; }
+.empty p { margin:0 auto; max-width:34ch; font-size:.9375rem; }
 
-.summary { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
-.stale { background:var(--warn); padding:10px 14px; border-radius:6px; margin:0 0 16px; }
-.warn { background:var(--warn); padding:12px 16px; border-radius:6px; margin-bottom:12px; }
-.warn ul { margin:6px 0 0; padding-left:20px; }
+.summary { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+.summary .sub { font-size:.9375rem; }
 
-.cabs { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+.notice { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; margin-bottom:16px; background:var(--tint-soft); border-radius:14px; font-size:.9375rem; }
+
+.issues { margin-bottom:16px; }
+.issues ul { list-style:none; margin:0; padding:0; }
+.issues-head { margin:0; padding:11px 16px; font-weight:600; border-bottom:.5px solid var(--sep); }
+.issues li { display:flex; justify-content:space-between; gap:12px; margin-left:16px; padding:11px 16px 11px 0; font-size:.9375rem; }
+.issues li + li { border-top:.5px solid var(--sep); }
+.issues .why { color:var(--danger); white-space:nowrap; }
+
+.cabs { list-style:none; padding:0; margin:0; display:grid; gap:16px; }
 @media (min-width:1100px) { .cabs { grid-template-columns:1fr 1fr; } }
-.cab { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:16px; }
-.cab-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-.plate { font:700 .9rem/1 var(--font-mono), monospace; background:var(--accent); color:#fff; padding:6px 10px; border-radius:4px; letter-spacing:.06em; }
-.pax { font-weight:700; }
-.cab-head a { margin-left:auto; font-size:.875rem; color:var(--muted); }
+.cab-head { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:.5px solid var(--sep); }
+/* Cab number as an app-icon style tile. */
+.num { display:grid; place-items:center; width:30px; height:30px; border-radius:8px; background:var(--tint); color:#fff; font-weight:700; font-size:.9375rem; font-variant-numeric:tabular-nums; }
+.pax { font-weight:600; }
+.cab-head a { margin-left:auto; font-size:.9375rem; }
 
-/* Pickups drawn as a route: dot, then a dashed clay leg with the drive time, then the next dot. */
-.route { list-style:none; margin:0; padding:0; }
-.stop { position:relative; padding-left:24px; }
-.stop::before { content:''; position:absolute; left:3px; top:7px; width:11px; height:11px; border-radius:50%; background:var(--ink); }
-.names { font-weight:700; }
-.addr { font-size:.875rem; color:var(--muted); }
-.leg { margin:6px 0 6px 8px; padding:4px 0 4px 20px; border-left:3px dashed var(--clay); font-size:.875rem; font-weight:700; }
-.alone { margin:10px 0 0; font-size:.875rem; color:var(--muted); }
-.usage { margin-top:24px; }
+/* Pickups drawn like a Maps route: filled dot, clay line carrying the drive time, ring at the second stop. */
+.route { list-style:none; margin:0; padding:14px 16px 16px; }
+.stop { position:relative; padding-left:28px; }
+.stop::before { content:''; position:absolute; left:4px; top:6px; width:12px; height:12px; border-radius:50%; background:var(--clay); }
+.route li + li .stop::before { background:var(--surface); box-shadow:inset 0 0 0 3px var(--clay); }
+.route li:first-child:not(:last-child) .stop::after, .route li + li .stop::after { content:''; position:absolute; left:9px; border-left:2px solid var(--clay); }
+.route li:first-child .stop::after { top:18px; bottom:0; }
+.route li + li .stop::after { top:0; height:6px; }
+.names { font-weight:600; }
+.addr { display:block; font-size:.875rem; color:var(--muted); }
+.addr:hover { color:var(--ink); }
+.leg { margin:0 0 0 9px; padding:8px 0 8px 23px; border-left:2px solid var(--clay); font-size:.8125rem; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; }
+.alone { margin:-4px 16px 16px 44px; font-size:.8125rem; color:var(--muted); }
+.usage { margin-top:28px; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .cab { animation:pull-in .25s ease-out both; }
-  @keyframes pull-in { from { opacity:0; transform:translateY(6px); } }
+  .cab { animation:rise .4s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes rise { from { opacity:0; transform:translateY(8px) scale(.99); } }
 }
