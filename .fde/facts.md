@@ -20,3 +20,4 @@
 | A2 implemented: four seats/three stops/10-minute consecutive legs, manual parties, correct multi-stop output, bounded nearby search. | Application diff and 10 passing tests, production build, mocked browser checks | Verified locally with provider mocks | 2026-10-19 |
 | Google Cloud quota settings were not inspected or modified; no live Google requests were made during validation. | Tool/action record; provider tests use mocked fetch/browser interception | High | 2026-10-19 |
 | Current consecutive-leg limit is 15 minutes inclusive; exactly 900 seconds accepted, 901 rejected. | Latest explicit user request; updated grouping/API tests pass, production build passes | Verified with mocked provider data | 2026-10-19 |
+| Current pickup/drop-off time budget: two stops ≤12 minutes; three stops ≤18 minutes total. | User clarification on 2026-10-20; 11 passing tests and successful build | Verified with mocked provider data | 2026-10-20 |

@@ -91,19 +91,24 @@ export default function Page() {
   return (
     <main>
       <header>
-        <h1>REFIX Cab Pooling</h1>
-        <p className="sub">Paste a guest list and get cabs to share.</p>
+        <div className="brand">REFIX <span>/ staff transport</span></div>
+        <span className="header-label">Cab pooling</span>
       </header>
+      <div className="intro">
+        <h1>A smoother way home.</h1>
+        <p className="sub">Paste the list. Review the groups. Send them on their way.</p>
+      </div>
+      <p className="route-rules">4 passengers / cab · 2 stops ≤ 12 min · 3 stops ≤ 18 min · Venue excluded</p>
 
       <div className="layout">
         <div className="panel">
-          <label className="group-label" htmlFor="list">Names and postal codes</label>
+          <div className="panel-heading"><h2>Staff list</h2><p className="sub">Paste names and postal codes.</p><label className="group-label" htmlFor="list">Names and postal codes</label></div>
           <div className="panel-body">
           <div className="group">
             <textarea id="list" value={text} onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !busy && text.trim()) run(); }}
               aria-describedby="count rules" spellCheck={false}
-              placeholder={'One person per line, e.g.\nJohn Tan, 560123\nMary Lim, 560456\nAhmad Ali\t730888'} />
+              placeholder={'One person per line, e.g.\nJohn Tan, 560123\nMary Lim, 560456'} />
             <p className="count" id="count" aria-live="polite">
               {text.trim() ? <>
                 <strong>{plural(parsed.people.length, 'person', 'people')}</strong> found
@@ -111,7 +116,7 @@ export default function Page() {
               </> : 'Rows copied from Excel work too.'}
             </p>
           </div>
-          <p className="foot" id="rules">Up to <strong>4 people</strong> and <strong>3 stops</strong> per cab.<br />At most <strong>15 minutes</strong> between consecutive stops.</p>
+          <p className="foot" id="rules">Up to <strong>4 people</strong> and <strong>3 stops</strong> per cab.<br />2 stops: <strong>12 min total</strong> · 3 stops: <strong>18 min total</strong>.</p>
           {parsed.skipped.length > 0 && (!result || stale) && (
             <div className="group issues" role="status">
               <p className="issues-head">Postal code needed</p>
@@ -126,6 +131,7 @@ export default function Page() {
         </div>
 
         <section ref={out} className="out" aria-live="polite" aria-busy={busy} style={{ scrollMarginTop: 24 }}>
+          {!result && <div className="summary"><div><h2>Cab assignments</h2><p className="sub">Your groups will appear here.</p></div></div>}
           {result && (
             <div className="summary">
               <div>
@@ -175,7 +181,7 @@ export default function Page() {
                     <div className="cab-head">
                       <div>
                         <h3>Cab {k + 1}</h3>
-                        <p className="cab-meta">{plural(cab.pax, 'person', 'people')} · {plural(cab.stops.length, 'stop')}</p>
+                        <p className="cab-meta">{plural(cab.pax, 'person', 'people')} · {plural(cab.stops.length, 'stop')}{cab.stops.length > 1 && ` · ${mins(cab.seconds)} min total`}</p>
                       </div>
                       {cab.stops.length > 1 && <a href={routeUrl(cab.stops)} target="_blank" rel="noreferrer">Route</a>}
                     </div>

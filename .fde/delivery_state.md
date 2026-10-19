@@ -35,3 +35,11 @@ User selected cleanup of the warm existing design for both device classes. Cab h
 ## A4 rule amendment
 
 Current maximum consecutive drive is 900 seconds (15 minutes), replacing 600 seconds. Updated boundary, three-stop, and mocked POST tests pass with all ten tests. Production build passes. User authorized GitHub upload; no deployment or quota changes.
+
+## A5 current time budgets
+
+Supersedes the per-leg rule: two-stop cabs have a 720-second total budget; three-stop cabs have a 1080-second total budget. UI displays the rules and each multi-stop cab's total. Eleven tests and production build pass; no live API calls or quota changes. A5 is local, not uploaded or deployed.
+
+## GitHub source upload — 2026-10-20
+
+User explicitly requested “upload to github”. Release includes current 12/18-minute route budgets, selected warm workspace, box alignment and removal of Ahmad Ali from the placeholder. Eleven tests, production build and diff whitespace check passed immediately before upload. Source upload targets the existing origin/main; deployment and live Google validation remain outside this release. Earlier “not uploaded” entries describe their historical checkpoints.

@@ -12,8 +12,8 @@ npm run build
 node '02 Design/feasibility-check.mjs'
 ```
 
-- Ten Node tests pass across the pure grouping interface and `POST /api/group` with mocked provider responses.
-- Tests cover whole-party/manual classification (including counts above the old 50-person input guard, which now safely require manual arrangement without provider work), directed nearby work bound, four people/three locations/12- and 15-minute legs, cab-count counterexamples, 900/901-second boundary, invalid directed durations, person conservation, cached reruns, malformed request data, 100-code guard, and missing matrix results.
+- Eleven Node tests pass across the pure grouping interface and `POST /api/group` with mocked provider responses.
+- Tests cover whole-party/manual classification (including counts above the old 50-person input guard, which now safely require manual arrangement without provider work), directed nearby work bound, four people/three locations/13- and 5-minute legs, cab-count counterexamples, 720/721-second two-stop and 1080/1081-second three-stop boundaries, invalid directed durations, person conservation, cached reruns, malformed request data, 100-code guard, and missing matrix results.
 - Production build passes with `/` and `/api/group` generated. Next.js warns about a parent-directory package-lock outside this repo; the build succeeds and that unrelated parent file was not changed.
 - Design spike remains runnable, now checking the new selector on the old nearest-pair counterexample. Its exhaustive oracle is limited to 16 synthetic locations and is not application code.
 - `git diff --check` passes.
@@ -52,3 +52,15 @@ Only presentation changed; `git diff --exit-code` confirms no changes to the gro
 ## A4 — threshold amendment verification
 
 Updated grouping and POST integration examples first failed under the old 10-minute rule, then all ten tests passed with the new 15-minute rule. Coverage accepts exactly 900 seconds, rejects 901 seconds, and accepts a 27-minute three-stop route with 12- and 15-minute legs. Production build passes. This is a numeric-rule/text change; prior responsive UI checks were not repeated, and no live Google calls were made. Existing API guards and quota settings were not changed.
+
+## A5 — stop-count time budgets
+
+The updated acceptance tests first failed with the old per-leg rule, then all 11 tests passed after candidate generation enforced a 12-minute total for two stops and 18-minute total for three stops. Coverage verifies inclusive boundaries, rejects totals one second over, retains every party once, and preserves an otherwise-invalid 13-minute prefix when a 5-minute continuation forms a valid three-stop cab. Mocked POST grouping confirms this route and trusted cached reruns. Production compilation passes; compiled initial-page text displays both budgets. No live Google calls or layout redesign were needed. The retained Design spike documents earlier experiments; current-rule acceptance is `npm test`.
+
+## A7 — selected warm workspace
+
+User selected A. The working app now uses its warm split layout on laptops and stacked layout on phones, retaining all existing interactions and dark mode. All 11 tests, production build and mocked browser checks passed at 320/390/768/1440 pixels. No Google calls, quota changes, upload or deployment. See [interface options](design-options.md).
+
+## A8 — box alignment
+
+User requested Impeccable refinement and aligned boxes. Shared desktop heading rows now align the staff-input box with the results area, including empty and populated states; responsive stacking is preserved. Single-stop notes align with passenger names. Browser geometry checks passed in light/dark mode; 320/390/768/1440-pixel state checks passed without overflow or page errors. Impeccable mechanical detection returned no findings. Google was mocked; no upload or deployment.

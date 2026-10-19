@@ -2,11 +2,11 @@
 
 Project: REFIX Cab Pooling
 Client: REFIX (event manpower company)
-Last Updated: 2026-10-19T17:53:39+08:00
+Last Updated: 2026-10-20T01:35:29+08:00
 
 ## Current Objective
 
-Apply the user-requested 15-minute consecutive-stop drive limit and publish the verified change to the existing GitHub repository.
+Apply selected option A to the working app while preserving grouping and current 12/18-minute total budgets.
 
 ## Primary Loop
 
@@ -21,11 +21,11 @@ Additional communication skill: caveman (default for FDE OS)
 Caveman cloud routing: off (user preference)
 Engineering skill: ponytail (default for FDE OS; level: full)
 
-Current work: interface refinement within the approved Delivery stage. Impeccable shape/refinement and Uncodixfy guide presentation; no backward stage transition is proposed. Existing product/workflow context is available from Discovery and A2; do not repeat that interview. User confirmed refining the current appearance for both laptops and phones. A3 presentation changes are implemented in app/page.js and globals.css; backend behavior remains unchanged.
+Current work: time-budget refinement within Delivery. Pure grouping and the existing POST interface own validation; the page shows both rules and total route durations. No stage transition or quota change is involved.
 
 ## Current Status
 
-A3 interface refinement implemented and verified. Ten tests, production compilation, and mocked light/dark responsive state checks pass. Remain in Delivery. The user subsequently authorized uploading A3 source to the existing GitHub repository; deployment is not approved.
+A5 implemented and locally verified: 11 tests and production build pass. The user clarified the 18-minute total for three stops and 12-minute two-stop maximum. No new upload or deployment has been performed. Remain in Delivery.
 
 ## Highest-Priority Uncertainty
 
@@ -45,11 +45,11 @@ Missing-code flagging and matching-postal-code grouping are confirmed. Parties a
 
 ## Next Action
 
-Collect planner feedback on the refined prototype after the authorized source upload. Do not change backend rules, Google quotas, or deployment.
+Present the updated local rules and verification for planner feedback. Source publication requires an upload request for this new revision.
 
 ## Return Condition
 
-The approved interface direction is implemented and verified on relevant screen sizes, while grouping behavior and API bounds remain intact.
+Two- and three-stop candidates satisfy their inclusive total-time budgets; UI and current requirements agree; existing capacity, party, and API bounds remain intact.
 
 ## Proposed Next Loop
 
@@ -99,6 +99,26 @@ User requested making the existing screen cleaner and cab groups easier, with fu
 
 A3 verification: light/dark at 320/390/768/1440 pixels, long names/addresses, multiple cabs, keyboard disclosures, usage access, empty/loading/error/manual-only/missing-only states, maps and clipboard. No overflow/page errors; production build and all 10 tests pass. Backend/API/package diff is empty. The user subsequently requested uploading these changes to the existing GitHub repository.
 
-## A4 current rule
+## A4 historical rule (superseded)
 
 User explicitly requested “lets change it to 15mins drive. and upload it to github”. The current limit is at most 15 minutes (900 seconds) per consecutive directed leg, superseding earlier 10-minute requirements in the history. Four passengers and three postal-code stops remain. Ten automated tests and production build pass; no Google quota settings, lookup bounds, or deployment changed. Source upload is authorized; next substantive work remains planner feedback within Delivery.
+
+## A5 current rule — 2026-10-20
+
+User clarified “A + B + C = 18mins; A + B = 12 mins”. Two-stop route totals must not exceed 720 seconds; three-stop totals must not exceed 1080 seconds. The total is first staff stop through last, excluding the venue. Keep longer two-stop prefixes during enumeration so 13 + 5 minutes remains a valid three-stop route; do not publish that prefix as a standalone two-stop cab. Eleven tests and production build pass. No live provider work, quota change, upload, or deployment occurred.
+
+## A6 interface exploration — 2026-10-20
+
+Three isolated read-only designs are available at `/prototype/design?variant=A` (A/B/C), with synthetic data only. Browser checks passed at 320/390/1440 pixels, including click/keyboard switching. The route is unavailable in production. Awaiting user preference; no winner, upload, deployment or stage transition. See `03 Delivery/design-options.md`.
+
+## A7 selection and implementation — 2026-10-20
+
+User selected “A”. The working app implements the warm workspace within Delivery. Light/dark phone/laptop checks, mocked interactions, 11 automated tests and production build passed. No API logic changes, upload or deployment. Local implementation is complete; next step is user feedback.
+
+## A8 — box alignment
+
+User requested Impeccable refinement and aligned boxes. Shared desktop heading rows now align the staff-input box with the results area, including empty and populated states; responsive stacking is preserved. Single-stop notes align with passenger names. Browser geometry checks passed in light/dark mode; 320/390/768/1440-pixel state checks passed without overflow or page errors. Impeccable mechanical detection returned no findings. Google was mocked; no upload or deployment.
+
+## GitHub source upload — 2026-10-20
+
+User explicitly requested “upload to github”. Release includes current 12/18-minute route budgets, selected warm workspace, box alignment and removal of Ahmad Ali from the placeholder. Eleven tests, production build and diff whitespace check passed immediately before upload. Source upload targets the existing origin/main; deployment and live Google validation remain outside this release. Earlier “not uploaded” entries describe their historical checkpoints.

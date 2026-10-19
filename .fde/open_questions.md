@@ -17,3 +17,9 @@
 | How are outputs shared, changes handled, access controlled, and API costs owned? | Later validation | User | Open before Discovery exit or explicitly bounded validation |
 | How should the build proceed after A1? | Resolved for A2 scope | User/agent | User requested continuing existing prototype with API limits preserved. Bounded best-found selection is implemented without global-minimum claims; no full matrix or exact-global requirement is assumed. |
 | What Google element budget and workload are acceptable? | Before live paid validation/pilot | User/account owner | Complete-graph worst-case element counts documented; no paid calls authorized by this draft |
+
+## Latest time-rule clarification
+
+User requests three-stop pickup/drop-off routes to have an 18-minute maximum. Asked whether this means the combined two-leg route time or each individual leg. Existing rule remains 15 minutes per consecutive leg until clarified; no new implementation or upload occurred.
+
+Resolved on 2026-10-20: user specifies A+B+C totals at most 18 minutes; A+B totals at most 12 minutes. The earlier total-versus-leg question is closed. These are complete-cab budgets by stop count, not a uniform per-leg rule.
