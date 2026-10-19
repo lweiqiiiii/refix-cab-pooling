@@ -13,7 +13,7 @@ node '02 Design/feasibility-check.mjs'
 ```
 
 - Ten Node tests pass across the pure grouping interface and `POST /api/group` with mocked provider responses.
-- Tests cover whole-party/manual classification (including counts above the old 50-person input guard, which now safely require manual arrangement without provider work), directed nearby work bound, four people/three locations/two 8-minute legs, cab-count counterexamples, 600/601-second boundary, invalid directed durations, person conservation, cached reruns, malformed request data, 100-code guard, and missing matrix results.
+- Tests cover whole-party/manual classification (including counts above the old 50-person input guard, which now safely require manual arrangement without provider work), directed nearby work bound, four people/three locations/12- and 15-minute legs, cab-count counterexamples, 900/901-second boundary, invalid directed durations, person conservation, cached reruns, malformed request data, 100-code guard, and missing matrix results.
 - Production build passes with `/` and `/api/group` generated. Next.js warns about a parent-directory package-lock outside this repo; the build succeeds and that unrelated parent file was not changed.
 - Design spike remains runnable, now checking the new selector on the old nearest-pair counterexample. Its exhaustive oracle is limited to 16 synthetic locations and is not application code.
 - `git diff --check` passes.
@@ -48,3 +48,7 @@ Only presentation changed; `git diff --exit-code` confirms no changes to the gro
 - Light/dark checks at 320, 390, 768, and 1440 pixels pass with long names/addresses and multiple cabs. Screenshots were visually inspected. No horizontal overflow or page errors occurred.
 - Keyboard Enter toggles native exception details. Manual-only output opens details automatically; optional Maps usage remains accessible. Empty, loading, error, and missing-only states pass; no real Google calls were made.
 - Impeccable's mechanical check reports no findings for the changed page/CSS. No new dependencies, live API work, Google quota edits, deployment, or GitHub upload occurred.
+
+## A4 — threshold amendment verification
+
+Updated grouping and POST integration examples first failed under the old 10-minute rule, then all ten tests passed with the new 15-minute rule. Coverage accepts exactly 900 seconds, rejects 901 seconds, and accepts a 27-minute three-stop route with 12- and 15-minute legs. Production build passes. This is a numeric-rule/text change; prior responsive UI checks were not repeated, and no live Google calls were made. Existing API guards and quota settings were not changed.

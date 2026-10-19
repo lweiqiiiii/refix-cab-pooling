@@ -4,7 +4,7 @@ Status: implemented and locally verified; awaiting user feedback. Stage remains 
 
 ## Delivered
 
-- Four passengers, up to three postal-code stops, and at most 10 minutes for each consecutive directed leg. Total inter-stop travel may exceed 10 minutes.
+- Four passengers, up to three postal-code stops, and at most 15 minutes for each consecutive directed leg. Total inter-stop travel may exceed 15 minutes.
 - Same-code parties stay intact. Parties above four are flagged for manual arrangement before Google calls; missing postal codes appear before grouping, and unresolved codes remain visible.
 - Bounded cab-count-first selection, then total inter-stop driving seconds. Existing nearby prefilter and eight-destination work bound remain; results do not claim a global minimum.
 - Individual leg durations, complete three-stop map links, accurate assigned-person totals, and clipboard assignments including unresolved/manual rows.
@@ -27,3 +27,7 @@ Nearby pruning and a 10,000-node search bound mean the global fewest-cabs result
 The user chose cleaner existing visuals and easier-to-read cab groups on both laptops and phones. The warm light/dark palette is preserved. Routes now occupy readable full-width cab sections with proper headings, passenger/stop counts, and numbered stops. Native exception disclosure keeps unassigned counts visible and opens automatically for manual-only results. Optional Maps usage/limits are separate; empty/loading states are distinct. Input, copy, map links, grouping, and API limits retain their behavior.
 
 See [interface brief](interface-refinement.md) and [validation](validation.md). The user subsequently authorized uploading A3 source to the existing GitHub repository; no deployment was performed.
+
+## A4 — 15-minute consecutive drives
+
+User requested increasing the consecutive-stop drive limit from 10 to 15 minutes and uploading the change to GitHub. Exactly 900 seconds is accepted; 901 seconds is rejected. A three-stop route can total 27 minutes when its legs take 12 and 15 minutes. Four seats, three stops, postal-code cohesion, manual/missing flags, candidate/API bounds, and quota settings are unchanged. All ten tests and production build pass; provider integration tests are mocked. No deployment or live API check was performed.

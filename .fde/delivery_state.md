@@ -31,3 +31,7 @@ Local implementation only. Stage remains Delivery; no Operations or deployment a
 ## A3 interface evidence
 
 User selected cleanup of the warm existing design for both device classes. Cab headings and stop numbers, full-width routes, native compact exception disclosure, optional Maps usage, and responsive spacing are implemented. Ten tests, production build, and mocked light/dark browser state checks at 320–1440 pixels pass. Awaiting real planner feedback; changes remain local.
+
+## A4 rule amendment
+
+Current maximum consecutive drive is 900 seconds (15 minutes), replacing 600 seconds. Updated boundary, three-stop, and mocked POST tests pass with all ten tests. Production build passes. User authorized GitHub upload; no deployment or quota changes.

@@ -10,3 +10,7 @@ Keep existing page/API/pure-module separation. Preserve same-code parties; suppo
 ## A3 interface refinement
 
 User selected cleanup of the existing screen, for laptops and phones equally. Preserve the warm palette and established workflow. Prefer full-width cab routes, proper cab headings/numbered stops, native compact exception disclosure with a visible count, and optional Maps-usage detail. Keep grouping and API behavior untouched.
+
+## A4 drive-time amendment
+
+User selected 15 minutes per consecutive drive and explicitly requested GitHub upload. This replaces the 10-minute rule without altering API work bounds, quotas, capacity, stop count, or same-code party handling.

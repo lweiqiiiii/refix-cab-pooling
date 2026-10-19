@@ -2,11 +2,11 @@
 
 Project: REFIX Cab Pooling
 Client: REFIX (event manpower company)
-Last Updated: 2026-10-19T17:41:48+08:00
+Last Updated: 2026-10-19T17:53:39+08:00
 
 ## Current Objective
 
-Deliver a cleaner existing interface with easier-to-read cab groups on laptops and phones, preserving grouping and API limits.
+Apply the user-requested 15-minute consecutive-stop drive limit and publish the verified change to the existing GitHub repository.
 
 ## Primary Loop
 
@@ -98,3 +98,7 @@ Independent completion review found no material issues. Its independent exact so
 User requested making the existing screen cleaner and cab groups easier, with full-timers using both laptops and phones. Preserve the warm identity; implement presentation refinement within Delivery. No grouping, Google/API guard, dependency, or deployment changes are part of this task.
 
 A3 verification: light/dark at 320/390/768/1440 pixels, long names/addresses, multiple cabs, keyboard disclosures, usage access, empty/loading/error/manual-only/missing-only states, maps and clipboard. No overflow/page errors; production build and all 10 tests pass. Backend/API/package diff is empty. The user subsequently requested uploading these changes to the existing GitHub repository.
+
+## A4 current rule
+
+User explicitly requested “lets change it to 15mins drive. and upload it to github”. The current limit is at most 15 minutes (900 seconds) per consecutive directed leg, superseding earlier 10-minute requirements in the history. Four passengers and three postal-code stops remain. Ten automated tests and production build pass; no Google quota settings, lookup bounds, or deployment changed. Source upload is authorized; next substantive work remains planner feedback within Delivery.

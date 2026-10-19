@@ -111,7 +111,7 @@ export default function Page() {
               </> : 'Rows copied from Excel work too.'}
             </p>
           </div>
-          <p className="foot" id="rules">Up to <strong>4 people</strong> and <strong>3 stops</strong> per cab.<br />At most <strong>10 minutes</strong> between consecutive stops.</p>
+          <p className="foot" id="rules">Up to <strong>4 people</strong> and <strong>3 stops</strong> per cab.<br />At most <strong>15 minutes</strong> between consecutive stops.</p>
           {parsed.skipped.length > 0 && (!result || stale) && (
             <div className="group issues" role="status">
               <p className="issues-head">Postal code needed</p>

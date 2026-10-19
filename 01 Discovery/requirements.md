@@ -13,7 +13,7 @@ REFIX is an event manpower company. Events starting early or ending late require
 - Each cab serves at most three distinct home locations, replacing the earlier two-location limit. People from the same house, such as siblings, count as one location while each counts toward passenger capacity.
 - Both home-to-venue and venue-to-home journeys occur. Only staff pickup/drop-off locations should determine groups; the venue must not affect grouping.
 - Minimize cab count first, then passenger journey time. The exact journey-time tie-break measure remains to be defined.
-- Each consecutive inter-stop drive may take at most 10 minutes. The total inter-stop journey may exceed 10 minutes, and nonconsecutive locations do not need to be within 10 minutes of each other.
+- Each consecutive inter-stop drive may take at most 15 minutes. The total inter-stop journey may exceed 15 minutes, and nonconsecutive locations do not need to be within 15 minutes of each other.
 - Google APIs are reportedly connected to determine travel times between locations. Integration health, product names, cost, and traffic assumptions have not been verified.
 
 ## Historical implementation evidence before A2 Delivery
@@ -24,7 +24,7 @@ The three-person cap conflicts with the four-passenger rule. The existing 15-min
 
 ## Acceptance candidates, not approved delivery scope
 
-Assignments must cover staff without exceeding four passengers per cab. Household sharing consumes one location but multiple passenger seats. Cab count takes priority over journey time, and venue information must not affect grouping. A cab may serve at most three distinct home locations, with each consecutive drive taking at most 10 minutes. Example: two siblings at A, one passenger at B, and one at C fit one cab when A–B and B–C each take 8 minutes, even if A–C takes 16 minutes.
+Assignments must cover staff without exceeding four passengers per cab. Household sharing consumes one location but multiple passenger seats. Cab count takes priority over journey time, and venue information must not affect grouping. A cab may serve at most three distinct home locations, with each consecutive drive taking at most 15 minutes. Example: two siblings at A, one passenger at B, and one at C fit one cab when A–B and B–C each take 8 minutes, even if A–C takes 16 minutes.
 
 ## Representative input evidence
 
@@ -52,10 +52,14 @@ Event volumes vary; no numerical upper bound or planning-time baseline is availa
 |---|---|
 | Four people at one postal code | One four-passenger cab, one location |
 | Two people at A, one at B, one at C; A–B and B–C each 8 minutes | One four-passenger, three-location cab is valid; total 16 minutes is allowed |
-| A consecutive leg exceeds 10 minutes | That route is not a valid shared cab |
+| A consecutive leg exceeds 15 minutes | That route is not a valid shared cab |
 | Same postal code has five people | Flag the entire party for manual arrangement; assign none of that party automatically |
 | An entry has an area name but no postal code | Show it as needing a postal code; never claim it is assigned |
 | Venue changes with identical staff locations | Grouping remains unchanged |
 | Two valid solutions differ in cab count | Prefer fewer cabs; shorter journey is secondary |
 
 These are requirements for future validation, not claims that the current prototype passes.
+
+## Latest rule amendment — A4
+
+The user requested 15 minutes per consecutive drive instead of 10. This supersedes the earlier 10-minute rule; total inter-stop travel may still exceed the per-leg limit. Four seats, three stops, postal-code cohesion, exception handling, and API guards remain unchanged.

@@ -168,7 +168,7 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 <div class="view-heading"><h2>Client overview</h2><p>Outcomes, commitments, and next steps</p></div>
 <dl class="meta">
 <div><dt>Current stage</dt><dd>Delivery</dd></div>
-<div><dt>Review status</dt><dd>Prototype A3 locally verified; awaiting user feedback</dd></div>
+<div><dt>Review status</dt><dd>Prototype A4 locally verified; awaiting user feedback</dd></div>
 <div><dt>Last verified update</dt><dd>2026-10-19 — code, build, mocked tests and browser review</dd></div>
 </dl>
 <div class="brief">
@@ -189,9 +189,9 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 <div><h3>What success looks like</h3><p>Fewer cabs is the first priority, shorter passenger journeys second. Only staff locations should affect grouping; the venue must not. Pasted names and postal codes are sufficient; the prototype otherwise meets the user’s intent. A measurable baseline remains open.</p></div>
 </div>
 <section id="scope"><h3>Scope and commitments</h3>
-<div class="grid"><div><h4>Included</h4><p>The existing paste/group/copy app supports four seats, three postal-code stops, and 10-minute consecutive legs. The refined interface uses full-width cab groups, clear headings and numbered stops, with compact unassigned-entry details for laptops and phones.</p></div><div><h4>Excluded or deferred</h4><p>Booking, payment, dispatch, new accounts, persistent staff history, and deployment remain outside this refinement.</p></div></div>
+<div class="grid"><div><h4>Included</h4><p>The existing paste/group/copy app supports four seats, three postal-code stops, and 15-minute consecutive legs. The refined interface uses full-width cab groups, clear headings and numbered stops, with compact unassigned-entry details for laptops and phones.</p></div><div><h4>Excluded or deferred</h4><p>Booking, payment, dispatch, new accounts, persistent staff history, and deployment remain outside this refinement.</p></div></div>
 </section>
-<h3>Questions and dependencies</h3><p>The user specifies four passengers and a 10-minute drive-time limit. Same-house passengers share one location and must stay in the same cab unless choosing different drop-off locations. At most three home locations are allowed. Each consecutive leg may take at most 10 minutes; total inter-stop travel may exceed 10 minutes. The refined code supports four passengers and at most 10 minutes per consecutive leg. The 12-person sample includes three area-only entries, which current parsing skips. Missing postal codes must be flagged in the app. Matching postal codes define one shared pickup/drop-off party. Parties above four must be flagged for manual arrangement without splitting. API health, costs, data access, and ownership remain unverified.</p>
+<h3>Questions and dependencies</h3><p>The user specifies four passengers and a 15-minute drive-time limit. Same-house passengers share one location and must stay in the same cab unless choosing different drop-off locations. At most three home locations are allowed. Each consecutive leg may take at most 15 minutes; total inter-stop travel may exceed 15 minutes. The refined code supports four passengers and at most 15 minutes per consecutive leg. The 12-person sample includes three area-only entries, which current parsing skips. Missing postal codes must be flagged in the app. Matching postal codes define one shared pickup/drop-off party. Parties above four must be flagged for manual arrangement without splitting. API health, costs, data access, and ownership remain unverified.</p>
 <p class="source">Supporting documents: <a href="01 Discovery/summary.md">Findings</a> · <a href="01 Discovery/scope.md">Scope</a> · <a href="01 Discovery/coverage.md">Questions and coverage</a></p>
 </section>
 <section id="design">
@@ -227,8 +227,8 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 <nav class="contents" aria-label="Developer guide sections"><a href="#requirements">Requirements</a><a href="#architecture">Architecture</a><a href="#setup">Setup</a><a href="#validation">Validation</a><a href="#runbook">Operations</a><a href="#sources">Documents</a></nav>
 </section>
 <section id="requirements"><h2>Requirements and system context</h2>
-<div class="grid"><div><h3>Workflow and business rules</h3><p>Four passengers, three postal-code stops, and at most 10 minutes per consecutive leg are enforced. Matching-code parties stay together. Above four passengers requires manual arrangement. Venue is excluded; selection prioritizes cab count before total inter-stop driving time.</p></div><div><h3>Systems and dependencies</h3><p>The user reports Google APIs for locations and drive times. Source shows a Next.js/React page submitting postal-code counts to /api/group. Integration health and production status remain unverified.</p></div></div>
-<details open><summary>Requirements and unresolved constraints</summary><p>lib/group.mjs enforces four seats and an inclusive 600-second directed-leg limit. Nearby route candidates and a 10,000-node search bound prevent a global-optimum claim. Real-event acceptance and live provider/quota behavior remain unverified.</p></details>
+<div class="grid"><div><h3>Workflow and business rules</h3><p>Four passengers, three postal-code stops, and at most 15 minutes per consecutive leg are enforced. Matching-code parties stay together. Above four passengers requires manual arrangement. Venue is excluded; selection prioritizes cab count before total inter-stop driving time.</p></div><div><h3>Systems and dependencies</h3><p>The user reports Google APIs for locations and drive times. Source shows a Next.js/React page submitting postal-code counts to /api/group. Integration health and production status remain unverified.</p></div></div>
+<details open><summary>Requirements and unresolved constraints</summary><p>lib/group.mjs enforces four seats and an inclusive 900-second directed-leg limit. Nearby route candidates and a 10,000-node search bound prevent a global-optimum claim. Real-event acceptance and live provider/quota behavior remain unverified.</p></details>
 <p class="source">Reference: <a href="01 Discovery/requirements.md">Requirements and acceptance criteria</a> · <a href="01 Discovery/coverage.md">Open questions and constraints</a></p>
 </section>
 <section id="architecture"><h2>Architecture and interfaces</h2>
@@ -239,7 +239,7 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 <defs><marker id="flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="var(--secondary)"/></marker></defs>
 <g fill="var(--surface)" stroke="var(--line)"><rect x="10" y="30" width="240" height="110" rx="6"/><rect x="330" y="30" width="240" height="110" rx="6"/><rect x="650" y="30" width="240" height="110" rx="6"/><rect x="330" y="240" width="240" height="100" rx="6"/></g>
 <g fill="var(--ink)" text-anchor="middle" font-size="18"><text x="130" y="65">Browser / planner</text><text x="450" y="65">POST /api/group</text><text x="770" y="65">Google APIs</text><text x="450" y="275">Pure grouping module</text></g>
-<g fill="var(--secondary)" text-anchor="middle" font-size="15"><text x="130" y="95">Names stay here</text><text x="130" y="119">Groups, flags, copy output</text><text x="450" y="95">Validate counts and exceptions</text><text x="450" y="119">Server key and trusted cache</text><text x="770" y="95">Postal-code geocoding</text><text x="770" y="119">Directed drive times</text><text x="450" y="303">4 passengers / 3 stops</text><text x="450" y="325">600 seconds per leg</text></g>
+<g fill="var(--secondary)" text-anchor="middle" font-size="15"><text x="130" y="95">Names stay here</text><text x="130" y="119">Groups, flags, copy output</text><text x="450" y="95">Validate counts and exceptions</text><text x="450" y="119">Server key and trusted cache</text><text x="770" y="95">Postal-code geocoding</text><text x="770" y="119">Directed drive times</text><text x="450" y="303">4 passengers / 3 stops</text><text x="450" y="325">900 seconds per leg</text></g>
 <g fill="none" stroke="var(--secondary)" stroke-width="1.5" marker-end="url(#flow-arrow)"><path d="M250 72H329"/><path d="M330 115H251"/><path d="M570 72H649"/><path d="M650 115H571"/><path d="M420 140V239"/><path d="M480 240V141"/></g>
 <g fill="var(--secondary)" font-size="14"><text x="270" y="54">Counts</text><text x="592" y="54">Lookups</text><text x="273" y="190">Route data</text><text x="495" y="190">Groups + exception flags</text></g>
 </svg>
@@ -268,7 +268,7 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 </section>
 </div>
 </main>
-<footer class="page">Local prototype A3 is ready for user review. Live Google quotas, deployment, and operational readiness remain unverified; the current stage is Delivery.</footer>
+<footer class="page">Local prototype A4 is ready for user review. Live Google quotas, deployment, and operational readiness remain unverified; the current stage is Delivery.</footer>
 <script>
 (() => {
   const navigation = document.querySelector('.tabs, .audiences');
