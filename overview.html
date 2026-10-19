@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REFIX Cab Pooling — Project overview</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #faf8f5; --surface: #ffffff; --ink: #292524;
+  --secondary: #57534e; --line: #d6d3d1; --accent: #85500f;
+  --soft: #f1ede7;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: var(--ink); background: var(--paper);
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-size: 16px; line-height: 1.65; }
+::selection { background: #ead8bd; color: var(--ink); }
+a { color: var(--accent); text-underline-offset: 4px; overflow-wrap: anywhere; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+[hidden] { display: none !important; }
+.skip-link { position: absolute; top: 8px; left: 16px; transform: translateY(-160%); background: var(--surface); padding: 8px 16px; z-index: 2; }
+.skip-link:focus { transform: none; }
+.page { max-width: 1120px; margin-inline: auto; padding-inline: 32px; }
+header { padding-top: 48px; }
+h1, h2, h3, h4 { line-height: 1.25; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.025em; margin: 0 0 8px; overflow-wrap: anywhere; }
+h2 { font-size: 26px; letter-spacing: -.015em; margin: 0 0 16px; }
+h3 { font-size: 19px; margin: 32px 0 12px; }
+h4 { font-size: 16px; margin: 24px 0 8px; }
+p { margin: 0 0 16px; max-width: 72ch; }
+.subtitle { font-size: 18px; color: var(--secondary); }
+.meta { display: flex; flex-wrap: wrap; gap: 16px 40px; margin: 24px 0 32px; font-size: 14px; }
+dt { color: var(--secondary); }
+dd { margin: 4px 0 0; font-weight: 600; }
+.audiences { display: flex; flex-wrap: wrap; gap: 8px 32px; border-bottom: 1px solid var(--line); }
+.audiences a { padding: 12px 0; min-height: 48px; color: var(--secondary); text-decoration: none; border-bottom: 3px solid transparent; }
+.audiences a:hover { color: var(--ink); }
+.audiences [aria-selected="true"] { color: var(--ink); font-weight: 650; border-color: var(--accent); }
+main { padding-top: 32px; }
+.view-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 16px; }
+.view-heading h2 { margin: 0; }
+.view-heading p { color: var(--secondary); font-size: 14px; margin: 0; }
+.contents { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px; margin: 24px 0 8px; }
+.contents a { padding-block: 8px; }
+section { padding: 32px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 24px; }
+section section { padding: 0; border: 0; margin-top: 32px; }
+.brief { background: var(--surface); border: 1px solid var(--line); padding: 24px; margin-top: 24px; }
+.brief h3 { margin-top: 0; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; }
+.grid h3:first-child, .grid h4:first-child { margin-top: 0; }
+.grid p:last-child { margin-bottom: 0; }
+.stage-heading { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; }
+.stage-heading h2 { margin: 0; }
+.stage-number { font-size: 18px; font-variant-numeric: tabular-nums; color: var(--accent); }
+.status { font-size: 14px; color: var(--secondary); margin: 0 0 24px; }
+.source { font-size: 14px; color: var(--secondary); margin: 24px 0 0; }
+.table-scroll { overflow-x: auto; margin-block: 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+caption { text-align: left; font-weight: 600; margin-bottom: 12px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; }
+td { color: var(--secondary); }
+.empty { padding: 20px; background: var(--soft); }
+.empty p:last-child { margin-bottom: 0; }
+details { border-block-start: 1px solid var(--line); padding: 16px 0; margin-top: 24px; }
+summary { cursor: pointer; font-weight: 600; min-height: 32px; }
+details > :not(summary) { margin-top: 16px; }
+ul { margin: 12px 0; padding-left: 24px; }
+li { margin-block: 8px; }
+.document-list { list-style: none; padding: 0; margin: 0; }
+.document-list li { border-bottom: 1px solid var(--line); padding: 12px 0; margin: 0; }
+.document-list a { display: inline-block; padding-block: 4px; }
+.document-list span { display: block; color: var(--secondary); font-size: 14px; }
+code, pre { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; padding: 16px; background: var(--soft); }
+svg { max-width: 100%; height: auto; }
+footer { padding-block: 24px 40px; color: var(--secondary); font-size: 13px; }
+@media (max-width: 640px) {
+  .page { padding-inline: 20px; }
+  header { padding-top: 28px; }
+  main { padding-top: 24px; }
+  .grid { grid-template-columns: 1fr; gap: 24px; }
+  .meta { gap: 16px 24px; }
+  .meta > div { flex: 1 1 130px; }
+  .audiences { gap: 24px; }
+  .brief { padding: 20px; }
+  h2 { font-size: 23px; }
+  section { padding-block: 28px; }
+  .contents { gap: 4px 20px; }
+}
+@media print {
+  :root { background: #fff; }
+  body { font-size: 10pt; }
+  .page { max-width: none; padding: 0; }
+  header { padding-top: 0; }
+  .skip-link, .audiences, .contents { display: none; }
+  [data-view][hidden] { display: block !important; }
+  #developer { break-before: page; }
+  .view-heading { margin-top: 24px; }
+  section { padding-block: 20px; }
+  h2, h3, h4, summary, caption { break-after: avoid; }
+  .brief, tr, .empty { break-inside: avoid; }
+  .table-scroll { overflow: visible; }
+  a { color: inherit; }
+  details::details-content { content-visibility: visible; display: block; }
+  details > * { display: block !important; }
+  @page { margin: 18mm; }
+}
+/* Presentation mode is progressive: all content remains readable without JavaScript. */
+body.presentation { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+.presentation > header { flex: none; width: 100%; margin-block: 0; padding-top: 20px; }
+.presentation h1 { font-size: clamp(24px, 3vw, 32px); }
+.presentation .subtitle { font-size: 14px; margin-bottom: 12px; }
+.presentation main { flex: 1; min-height: 0; width: 100%; padding-top: 0; display: flex; flex-direction: column; }
+.presentation [data-view] { flex: 1; min-height: 0; }
+.presentation .slide { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: var(--line) var(--paper); padding: 24px 8px 32px; border: 0; }
+.presentation .slide:focus { outline-offset: -3px; }
+.presentation .slide > :first-child { margin-top: 0; }
+.presentation > footer { display: none; }
+.deck-controls { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding-block: 16px; border-bottom: 1px solid var(--line); }
+.deck-controls button, .deck-controls select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-height: 44px; padding: 8px 12px; }
+.deck-controls select { width: 100%; min-width: 0; text-overflow: ellipsis; }
+.deck-controls button { cursor: pointer; }
+.deck-controls button:hover:not(:disabled) { background: var(--soft); border-color: var(--accent); }
+.deck-controls button:disabled { color: var(--secondary); opacity: .55; cursor: default; }
+.deck-controls output { font-size: 14px; font-variant-numeric: tabular-nums; color: var(--secondary); white-space: nowrap; }
+.presentation .catalogue ul { columns: 2; column-gap: 40px; }
+.catalogue li { break-inside: avoid; }
+.catalogue li span { display: block; color: var(--secondary); font-size: 14px; }
+@media (max-width: 680px) {
+  .presentation > header { padding-top: 16px; }
+  .presentation .subtitle { display: none; }
+  .deck-controls { grid-template-columns: 1fr auto 1fr; gap: 8px; padding-block: 12px; }
+  .deck-controls select { grid-column: 1 / -1; grid-row: 1; }
+  .deck-controls button:last-child { justify-self: end; }
+  .presentation .slide { padding-top: 20px; }
+  .presentation .catalogue ul { columns: 1; }
+}
+@media print {
+  body.presentation { display: block; height: auto; overflow: visible; }
+  .presentation > header { padding-top: 0; }
+  .presentation main, .presentation [data-view] { display: block; }
+  .deck-controls { display: none !important; }
+  .presentation .slide, .presentation .slide[hidden] { display: block !important; height: auto; overflow: visible; padding: 20px 0; break-before: page; }
+  .presentation > footer { display: block; }
+  .presentation .catalogue ul { columns: 1; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to project content</a>
+<header class="page">
+<h1>REFIX Cab Pooling</h1>
+<p class="subtitle">Project overview</p>
+
+<nav class="audiences" aria-label="Choose your view">
+<a id="client-tab" href="#client">Client overview</a>
+<a id="developer-tab" href="#developer">Developer guide</a>
+</nav>
+</header>
+<main class="page" id="main" tabindex="-1">
+<!-- Maintainers: use verified stage documents. Preserve project-specific content. Do not infer progress, approval, owners, dates, or technical claims from this template. -->
+<div id="client" data-view>
+<section id="client-intro">
+
+<div class="view-heading"><h2>Client overview</h2><p>Outcomes, commitments, and next steps</p></div>
+<dl class="meta">
+<div><dt>Current stage</dt><dd>Delivery</dd></div>
+<div><dt>Review status</dt><dd>Prototype A2 locally verified; awaiting user feedback</dd></div>
+<div><dt>Last verified update</dt><dd>2026-10-19 — code, build, mocked tests and browser review</dd></div>
+</dl>
+<div class="brief">
+<h3>At a glance</h3>
+<p>REFIX provides transport for staff working events that start early or end late. Planning currently groups names and home locations into shared cabs. The intended improvement is easier grouping; measurable success and first-release scope remain to be agreed.</p>
+<div class="grid">
+<div><h4>Next decision</h4><p>Try the refined local prototype and review its assignments. Google quota settings remain unchanged; live allowance enforcement is unverified.</p></div>
+<div><h4>Owner and target date</h4><p>Not yet assigned or agreed.</p></div>
+</div>
+</div>
+<nav class="contents" aria-label="Client overview sections"><a href="#discovery">01 Discovery</a><a href="#design">02 Design</a><a href="#prototype">03 Delivery</a><a href="#operations">04 Operations</a></nav>
+</section>
+<section id="discovery">
+<div class="stage-heading"><span class="stage-number">01</span><h2>Discovery</h2></div>
+<p class="status">Core rules confirmed; Discovery-to-Design transition approved</p>
+<div class="grid">
+<div><h3>The problem</h3><p>Staff need journeys from home to the event venue or back home. REFIX collects names and locations/postal codes and groups nearby staff. Full-time staff manually compare postal codes; staff counts vary. Planning effort, costs, and errors have not been measured.</p></div>
+<div><h3>What success looks like</h3><p>Fewer cabs is the first priority, shorter passenger journeys second. Only staff locations should affect grouping; the venue must not. Pasted names and postal codes are sufficient; the prototype otherwise meets the user’s intent. A measurable baseline remains open.</p></div>
+</div>
+<section id="scope"><h3>Scope and commitments</h3>
+<div class="grid"><div><h4>Included</h4><p>The existing paste/group/copy app now supports four seats, three postal-code stops, 10-minute consecutive legs, and explicit missing/manual exceptions. A full-timer reviews the output.</p></div><div><h4>Excluded or deferred</h4><p>Booking, payment, dispatch, new accounts, persistent staff history, and deployment remain outside this refinement.</p></div></div>
+</section>
+<h3>Questions and dependencies</h3><p>The user specifies four passengers and a 10-minute drive-time limit. Same-house passengers share one location and must stay in the same cab unless choosing different drop-off locations. At most three home locations are allowed. Each consecutive leg may take at most 10 minutes; total inter-stop travel may exceed 10 minutes. The refined code supports four passengers and at most 10 minutes per consecutive leg. The 12-person sample includes three area-only entries, which current parsing skips. Missing postal codes must be flagged in the app. Matching postal codes define one shared pickup/drop-off party. Parties above four must be flagged for manual arrangement without splitting. API health, costs, data access, and ownership remain unverified.</p>
+<p class="source">Supporting documents: <a href="01 Discovery/summary.md">Findings</a> · <a href="01 Discovery/scope.md">Scope</a> · <a href="01 Discovery/coverage.md">Questions and coverage</a></p>
+</section>
+<section id="design">
+<div class="stage-heading"><span class="stage-number">02</span><h2>Design</h2></div>
+<p class="status">Design A2 authorized for the narrow prototype build</p>
+<h3>Proposed approach</h3><p>The user chose to continue building the existing prototype while preserving API limits. Nearby lookups and bounded cab-count-first search replace the complete-graph proposal. Ordered routes, whole-party flags, trusted server caches, and per-leg output are implemented.</p>
+<section id="timeline"><h3>Milestones and timeline</h3>
+<div class="table-scroll" role="region" aria-label="Project milestones" tabindex="0"><table>
+<caption>Agreed and proposed milestones</caption>
+<thead><tr><th scope="col">Milestone</th><th scope="col">Owner</th><th scope="col">Target date</th><th scope="col">Status</th></tr></thead>
+<tbody><tr><td>Refine existing prototype</td><td>Agent builds; user reviews</td><td>No committed date</td><td>Implemented and locally verified</td></tr><tr><td>Real event acceptance</td><td>REFIX planner</td><td>Not agreed</td><td>Awaiting user feedback</td></tr><tr><td>Pilot or deployment</td><td>Owner to be confirmed</td><td>Not agreed</td><td>Not authorized or performed</td></tr></tbody>
+</table></div></section>
+<p class="source">Supporting documents: <a href="02 Design/architecture.md">Workflow and architecture</a> · <a href="02 Design/summary.md">Design summary</a> · <a href="02 Design/decisions.md">Decisions</a> · <a href="02 Design/timeline.md">Timeline</a></p>
+</section>
+<section id="prototype">
+<div class="stage-heading"><span class="stage-number">03</span><h2>Delivery</h2></div>
+<p class="status">A2 implemented; local validation passed</p>
+<div class="grid"><div><h3>What is ready</h3><p>Four passengers, three ordered stops, intact postal-code parties, per-leg times, missing-code flags, manual arrangement above four, and complete map/clipboard output are implemented. Ten tests and the production build pass.</p></div><div><h3>What remains</h3><p>Real planner acceptance, live provider/quota behavior, retention terms, access, and operating ownership remain unverified. Nearby pruning and bounded selection cannot guarantee the global fewest cabs.</p></div></div>
+<h3>Prototype walkthrough</h3><p>Run the existing app locally, paste names and postal codes, select <strong>Group into cabs</strong>, review ordered stops and the <strong>Not in a cab</strong> list, then use <strong>Route</strong> or <strong>Copy for WhatsApp</strong>. Browser verification used synthetic responses; there is no hosted release from this delivery.</p>
+<p class="source">Supporting documents: <a href="03 Delivery/prototype.md">Walkthrough</a> · <a href="03 Delivery/validation.md">Validation results</a> · <a href="03 Delivery/summary.md">Delivery summary</a></p>
+</section>
+<section id="operations">
+<div class="stage-heading"><span class="stage-number">04</span><h2>Operations</h2></div>
+<p class="status">Operating arrangements awaiting confirmation</p>
+<div class="grid"><div><h3>Ownership and support</h3><p>Service ownership, support contacts, and handover arrangements have not yet been agreed.</p></div><div><h3>Outcomes and performance</h3><p>Live service health, adoption, and measured outcomes are not yet available.</p></div></div>
+<p class="source">Supporting documents: <a href="04 Operations/outcomes.md">Outcomes</a> · <a href="04 Operations/handoff.md">Handover</a> · <a href="04 Operations/summary.md">Operations summary</a></p>
+</section>
+</div>
+<div id="developer" data-view>
+<section id="developer-intro">
+<div class="view-heading"><h2>Developer guide</h2><p>System context, implementation, and operation</p></div>
+<p>The existing app has been refined in place. Ten mocked automated tests, production compilation, and desktop/mobile browser checks pass. A bounded 100-location synthetic check preserved every assignment invariant; live Google validation has not occurred.</p>
+<nav class="contents" aria-label="Developer guide sections"><a href="#requirements">Requirements</a><a href="#architecture">Architecture</a><a href="#setup">Setup</a><a href="#validation">Validation</a><a href="#runbook">Operations</a><a href="#sources">Documents</a></nav>
+</section>
+<section id="requirements"><h2>Requirements and system context</h2>
+<div class="grid"><div><h3>Workflow and business rules</h3><p>Four passengers, three postal-code stops, and at most 10 minutes per consecutive leg are enforced. Matching-code parties stay together. Above four passengers requires manual arrangement. Venue is excluded; selection prioritizes cab count before total inter-stop driving time.</p></div><div><h3>Systems and dependencies</h3><p>The user reports Google APIs for locations and drive times. Source shows a Next.js/React page submitting postal-code counts to /api/group. Integration health and production status remain unverified.</p></div></div>
+<details open><summary>Requirements and unresolved constraints</summary><p>lib/group.mjs enforces four seats and an inclusive 600-second directed-leg limit. Nearby route candidates and a 10,000-node search bound prevent a global-optimum claim. Real-event acceptance and live provider/quota behavior remain unverified.</p></details>
+<p class="source">Reference: <a href="01 Discovery/requirements.md">Requirements and acceptance criteria</a> · <a href="01 Discovery/coverage.md">Open questions and constraints</a></p>
+</section>
+<section id="architecture"><h2>Architecture and interfaces</h2>
+<p>Implemented refinement in existing app paths. Provider behavior was verified with mocks; Google account configuration remains unverified.</p>
+<svg viewBox="0 0 900 360" role="img" aria-labelledby="context-title context-description" style="display:block;width:100%;height:auto;min-width:0">
+<title id="context-title">Implemented REFIX grouping data flow</title>
+<desc id="context-description">A planner pastes names and postal codes into the browser. Postal-code counts reach the server route, which requests Google locations and directed travel times and passes trusted data into the pure grouping module. Groups and exceptions return to the browser. Names remain in the browser and the Google key remains on the server; the app uses existing modules and in-memory data.</desc>
+<defs><marker id="flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="var(--secondary)"/></marker></defs>
+<g fill="var(--surface)" stroke="var(--line)"><rect x="10" y="30" width="240" height="110" rx="6"/><rect x="330" y="30" width="240" height="110" rx="6"/><rect x="650" y="30" width="240" height="110" rx="6"/><rect x="330" y="240" width="240" height="100" rx="6"/></g>
+<g fill="var(--ink)" text-anchor="middle" font-size="18"><text x="130" y="65">Browser / planner</text><text x="450" y="65">POST /api/group</text><text x="770" y="65">Google APIs</text><text x="450" y="275">Pure grouping module</text></g>
+<g fill="var(--secondary)" text-anchor="middle" font-size="15"><text x="130" y="95">Names stay here</text><text x="130" y="119">Groups, flags, copy output</text><text x="450" y="95">Validate counts and exceptions</text><text x="450" y="119">Server key and trusted cache</text><text x="770" y="95">Postal-code geocoding</text><text x="770" y="119">Directed drive times</text><text x="450" y="303">4 passengers / 3 stops</text><text x="450" y="325">600 seconds per leg</text></g>
+<g fill="none" stroke="var(--secondary)" stroke-width="1.5" marker-end="url(#flow-arrow)"><path d="M250 72H329"/><path d="M330 115H251"/><path d="M570 72H649"/><path d="M650 115H571"/><path d="M420 140V239"/><path d="M480 240V141"/></g>
+<g fill="var(--secondary)" font-size="14"><text x="270" y="54">Counts</text><text x="592" y="54">Lookups</text><text x="273" y="190">Route data</text><text x="495" y="190">Groups + exception flags</text></g>
+</svg>
+<p>Data path: pasted list → postal-code parties → missing/manual flags → trusted directed route data → feasible three-stop candidates → cab-count-first selection → names and ordered assignments in the browser. Venue data is excluded.</p>
+<p>The user-directed A2 build uses bounded nearby candidates and up to 10,000 search nodes, returning a valid best-found partition. The interface states that the fewest possible cabs are not guaranteed.</p>
+<p class="source">Design evidence: <a href="02 Design/feasibility.md">Synthetic checks and limits</a> · <a href="02 Design/decisions.md">Selection options</a></p>
+<div class="grid" style="margin-top:24px"><div><h3>Components and interfaces</h3><p>Keep the browser page for names and display, POST /api/group for input validation and Google requests, and lib/group.mjs for pure route/group selection. Return ordered stops and per-leg times plus explicit unresolved/manual categories. Update all callers and output formats together.</p></div><div><h3>Data and security</h3><p>Names stay in the browser; the server receives postal-code counts. The Google key stays server-side. Trusted server caching replaces unsigned client durations as route evidence. No persistent staff history or new database is proposed. Access and operational ownership remain unverified.</p></div></div>
+<details open><summary>Deployment and design decisions</summary><p>Keep the current deployment path; no deployment is authorized. Provider errors must not become no-route results. Unresolved people remain visible. The existing 100-code guard, 15-km nearby filter, and eight-destination bound remain. At most 800 directed route elements are considered at that cap; smaller runs may use more than old one-direction checks. External Google quotas were not inspected or changed; these app guards do not guarantee free use.</p></details>
+<p class="source">Reference: <a href="02 Design/architecture.md">Architecture</a> · <a href="02 Design/decisions.md">Decision record</a></p>
+</section>
+<section id="setup"><h2>Local setup and prototype</h2>
+<div class="grid"><div><h3>Prerequisites and configuration</h3><p>Existing Next.js/React dependencies are unchanged. GOOGLE_MAPS_API_KEY stays in ignored server-side environment configuration. API access and actual account quotas require owner verification before real grouping.</p></div><div><h3>Run the application</h3><p>From the repository root, use npm run dev and open its printed URL. Browser verification used npm run dev -- --hostname 127.0.0.1 --port 3011. Run npm test for mocked checks and npm run build for compilation.</p></div></div>
+<h3>Behavior and limitations</h3><p>Prototype A2 is implemented locally. All automated/browser verification uses synthetic provider data. Server memory caches expire after 24 hours for geocodes and five minutes for drives. Cold starts may repeat lookups. Live credentials, quotas, and provider retention terms remain unverified.</p>
+<p class="source">Reference: <a href="03 Delivery/setup.md">Setup instructions</a> · <a href="03 Delivery/prototype.md">Prototype and user journeys</a></p>
+</section>
+<section id="validation"><h2>Validation and release</h2>
+<div class="grid"><div><h3>Test evidence</h3><p>All ten tests and the production build pass. Mocked desktop/mobile checks cover missing/manual flags, assigned counts, distinct leg times, map waypoints, clipboard output, and overflow. Independent review found no material issues and matched selection to an exact solver on 1,000 seeded small cases. A synthetic 100-location run used 800 directed candidates and conserved all people.</p></div><div><h3>Release readiness</h3><p>Release version, deployment procedure, outstanding issues, and rollback steps are not yet established.</p></div></div>
+<p class="source">Reference: <a href="03 Delivery/validation.md">Validation evidence</a> · <a href="03 Delivery/release.md">Release instructions</a></p>
+</section>
+<section id="runbook"><h2>Operating the system</h2>
+<div class="grid"><div><h3>Health and incident response</h3><p>Monitoring, alerts, service objectives, incident response, and recovery procedures are not yet documented.</p></div><div><h3>Maintenance and ownership</h3><p>Maintainers, escalation contacts, ongoing costs, backup arrangements, and handover checks remain to be agreed.</p></div></div>
+<p class="source">Reference: <a href="04 Operations/runbook.md">Runbook</a> · <a href="04 Operations/outcomes.md">Outcome measures</a> · <a href="04 Operations/handoff.md">Ownership and handover</a></p>
+</section>
+<section id="sources"><h2>Project documents</h2><p>Stage documents hold the detailed requirements, decisions, and evidence behind this overview.</p>
+<ul class="document-list"><li><a href="01 Discovery/README.md">01 Discovery</a><span>Problem, requirements, scope, and findings</span></li><li><a href="02 Design/README.md">02 Design</a><span>Architecture, decisions, and milestones</span></li><li><a href="03 Delivery/README.md">03 Delivery</a><span>Application, setup, validation, and release</span></li><li><a href="04 Operations/README.md">04 Operations</a><span>Runbook, outcomes, and handover</span></li></ul>
+</section>
+</div>
+</main>
+<footer class="page">Local prototype A2 is ready for user review. Live Google quotas, deployment, and operational readiness remain unverified; the current stage is Delivery.</footer>
+<script>
+(() => {
+  const navigation = document.querySelector('.tabs, .audiences');
+  const tabs = [...navigation.querySelectorAll('a')];
+  const views = tabs.map(tab => document.querySelector(tab.getAttribute('href')));
+  const decks = views.map(view => [...view.querySelectorAll(':scope > section')]);
+  const positions = views.map(() => 0);
+  let audience = 0;
+  const controls = document.createElement('nav');
+  controls.className = 'deck-controls';
+  controls.setAttribute('aria-label', 'Presentation controls');
+  controls.innerHTML = '<button type="button" data-previous>Previous</button><select aria-label="Choose a slide"></select><output aria-live="polite" aria-atomic="true"></output><button type="button" data-next>Next</button>';
+  document.querySelector('main').prepend(controls);
+  const previous = controls.querySelector('[data-previous]');
+  const next = controls.querySelector('[data-next]');
+  const picker = controls.querySelector('select');
+  const counter = controls.querySelector('output');
+  navigation.setAttribute('role', 'tablist');
+  tabs.forEach((tab, index) => {
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-controls', views[index].id);
+    views[index].setAttribute('role', 'tabpanel');
+    views[index].setAttribute('aria-labelledby', tab.id);
+    decks[index].forEach((slide, number) => {
+      slide.classList.add('slide');
+      slide.tabIndex = -1;
+      slide.setAttribute('role', 'group');
+      slide.setAttribute('aria-roledescription', 'slide');
+      slide.setAttribute('aria-label', `${number + 1} of ${decks[index].length}`);
+    });
+  });
+  function show(viewIndex, slideIndex, { focus = false, bookmark = false } = {}) {
+    audience = viewIndex;
+    positions[audience] = slideIndex;
+    tabs.forEach((tab, index) => {
+      tab.setAttribute('aria-selected', String(index === audience));
+      tab.tabIndex = index === audience ? 0 : -1;
+      views[index].hidden = index !== audience;
+      decks[index].forEach((slide, number) => { slide.hidden = number !== positions[index]; });
+    });
+    picker.replaceChildren(...decks[audience].map((slide, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = `${index + 1}. ${slide.querySelector('h2, h3').textContent}`;
+      return option;
+    }));
+    picker.value = slideIndex;
+    previous.disabled = slideIndex === 0;
+    next.disabled = slideIndex === decks[audience].length - 1;
+    counter.textContent = `${slideIndex + 1} / ${decks[audience].length}`;
+    const slide = decks[audience][slideIndex];
+    slide.scrollTop = 0;
+    if (bookmark) history.pushState(null, '', '#' + slide.id);
+    if (focus) slide.focus({ preventScroll: true });
+  }
+  function move(delta) {
+    const index = positions[audience] + delta;
+    if (index >= 0 && index < decks[audience].length) show(audience, index, { focus: true, bookmark: true });
+  }
+  function syncLocation() {
+    let id;
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch { show(0, 0); return; }
+    const target = document.getElementById(id);
+    const viewIndex = views.findIndex(view => view === target || view.contains(target));
+    if (viewIndex < 0) { show(0, 0); return; }
+    const index = decks[viewIndex].findIndex(slide => slide === target || slide.contains(target));
+    show(viewIndex, Math.max(0, index));
+    if (index >= 0 && target !== decks[viewIndex][index]) target.scrollIntoView({ block: 'nearest' });
+  }
+  previous.addEventListener('click', () => move(-1));
+  next.addEventListener('click', () => move(1));
+  picker.addEventListener('change', () => show(audience, Number(picker.value), { focus: true, bookmark: true }));
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', event => {
+      event.preventDefault();
+      show(index, positions[index], { bookmark: true });
+    });
+    tab.addEventListener('keydown', event => {
+      let target;
+      if (event.key === 'ArrowRight') target = (index + 1) % tabs.length;
+      if (event.key === 'ArrowLeft') target = (index + tabs.length - 1) % tabs.length;
+      if (event.key === 'Home') target = 0;
+      if (event.key === 'End') target = tabs.length - 1;
+      if (target !== undefined) {
+        event.preventDefault();
+        show(target, positions[target], { bookmark: true });
+        tabs[target].focus();
+      }
+      if (event.key === ' ') { event.preventDefault(); tab.click(); }
+    });
+  });
+  document.addEventListener('keydown', event => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.target.closest('a, button, input, select, textarea, summary, [contenteditable]')) return;
+    if (event.key === 'ArrowRight') { event.preventDefault(); move(1); }
+    if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1); }
+    if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault();
+      show(audience, event.key === 'Home' ? 0 : decks[audience].length - 1, { focus: true, bookmark: true });
+    }
+  });
+  window.addEventListener('hashchange', syncLocation);
+  window.addEventListener('popstate', syncLocation);
+  let closedDetails = [];
+  window.addEventListener('beforeprint', () => {
+    closedDetails = [...document.querySelectorAll('details:not([open])')];
+    closedDetails.forEach(detail => { detail.open = true; });
+  });
+  window.addEventListener('afterprint', () => {
+    closedDetails.forEach(detail => { detail.open = false; });
+    closedDetails = [];
+  });
+  document.body.classList.add('presentation');
+  syncLocation();
+})();
+</script>
+</body>
+</html>

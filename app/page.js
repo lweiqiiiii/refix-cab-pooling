@@ -17,14 +17,24 @@ function parse(text) {
 const mins = (s) => Math.round(s / 60);
 const plural = (n, word, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;
 const mapsUrl = (code) => `https://www.google.com/maps/search/?api=1&query=Singapore%20${code}`;
-const routeUrl = (a, b) => `https://www.google.com/maps/dir/?api=1&origin=Singapore%20${a}&destination=Singapore%20${b}&travelmode=driving`;
+function routeUrl(stops) {
+  const params = new URLSearchParams({ api: '1', origin: `Singapore ${stops[0].code}`, destination: `Singapore ${stops.at(-1).code}`, travelmode: 'driving' });
+  if (stops.length > 2) params.set('waypoints', stops.slice(1, -1).map(s => `Singapore ${s.code}`).join('|'));
+  return `https://www.google.com/maps/dir/?${params}`;
+}
 
-function asText(cabs) {
-  return cabs.map((cab, k) => {
-    const head = `Cab ${k + 1} (${cab.pax} pax${cab.seconds != null ? `, ${mins(cab.seconds)} min between pickups` : ''})`;
-    const lines = cab.stops.map((s, n) => `Pickup ${n + 1}: ${s.names.join(', ')} (${s.code})`);
+function asText(result) {
+  const grouped = result.cabs.map((cab, k) => {
+    const head = `Cab ${k + 1} (${cab.pax} pax${cab.stops.length > 1 ? `, ${mins(cab.seconds)} min between stops` : ''})`;
+    const lines = cab.stops.map((s, n) => `Stop ${n + 1}: ${s.names.join(', ')} (${s.code})`);
     return [head, ...lines].join('\n');
   }).join('\n\n');
+  const unassigned = [
+    ...result.manual.map(p => `${p.name} (${p.code}): Manual arrangement — more than 4 people at this postal code`),
+    ...result.notFound.map(p => `${p.name} (${p.code}): Postal code not found`),
+    ...result.skipped.map(line => `${line}: No postal code`),
+  ];
+  return [grouped, unassigned.length ? `Not assigned\n${unassigned.join('\n')}` : ''].filter(Boolean).join('\n\n');
 }
 
 export default function Page() {
@@ -33,9 +43,6 @@ export default function Page() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
-  // Google results remembered while this page is open, so re-runs after small edits only pay for what's new.
-  // ponytail: kept in memory only (gone on refresh). Google's terms restrict storing route results long-term.
-  const cache = useRef({ geo: {}, rides: {} });
   const out = useRef(null);
   const parsed = useMemo(() => parse(text), [text]);
 
@@ -45,17 +52,10 @@ export default function Page() {
     setBusy(true); setError(''); setResult(null); setCopied(false);
     const codes = {};
     for (const p of people) codes[p.code] = (codes[p.code] ?? 0) + 1;
-    // Only send what's relevant to this list.
-    const known = {
-      geo: Object.fromEntries(Object.entries(cache.current.geo).filter(([c]) => c in codes)),
-      rides: Object.fromEntries(Object.entries(cache.current.rides).filter(([k]) => k.split('-').every((c) => c in codes))),
-    };
     try {
-      const res = await fetch('/api/group', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codes, known }) });
+      const res = await fetch('/api/group', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codes }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      Object.assign(cache.current.geo, data.geo);
-      Object.assign(cache.current.rides, data.rides);
       // Put names back: the server only saw postal codes and headcounts.
       const queue = {};
       for (const p of people) (queue[p.code] ??= []).push(p.name);
@@ -64,7 +64,8 @@ export default function Page() {
         return { ...cab, stops, pax: stops.reduce((n, s) => n + s.count, 0) };
       });
       const notFound = people.filter((p) => data.notFound.includes(p.code));
-      setResult({ cabs, notFound, skipped, total: people.length, used: data.used, text });
+      const manual = people.filter(p => data.manual.includes(p.code));
+      setResult({ cabs, notFound, manual, skipped, used: data.used, text });
       // On phones the results sit below the form; bring them into view.
       if (innerWidth < 900) out.current.scrollIntoView({ behavior: 'smooth' });
     } catch (e) {
@@ -75,8 +76,12 @@ export default function Page() {
   }
 
   async function copy() {
-    await navigator.clipboard.writeText(asText(result.cabs));
-    setCopied(true);
+    try {
+      await navigator.clipboard.writeText(asText(result));
+      setCopied(true);
+    } catch {
+      setError('Could not copy. Allow clipboard access or select the assignments to copy them.');
+    }
   }
 
   const stale = result && result.text !== text;
@@ -105,7 +110,13 @@ export default function Page() {
               </> : 'Rows copied from Excel work too.'}
             </p>
           </div>
-          <p className="foot" id="rules">Up to 3 people per cab, from at most 2 postal codes under 15 minutes' drive apart.</p>
+          <p className="foot" id="rules">Up to 4 people per cab, from at most 3 postal codes. Each drive between consecutive stops is at most 10 minutes.</p>
+          {parsed.skipped.length > 0 && (!result || stale) && (
+            <div className="group issues" role="status">
+              <p className="issues-head">Postal code needed</p>
+              <ul>{parsed.skipped.map((line, i) => <li key={i}><span>{line}</span><span className="why">No postal code</span></li>)}</ul>
+            </div>
+          )}
           <button className="go" onClick={run} disabled={busy || !parsed.people.length}>
             {busy ? 'Grouping…' : 'Group into cabs'}<kbd aria-hidden="true">⌘↵</kbd>
           </button>
@@ -117,8 +128,8 @@ export default function Page() {
           {result && (
             <div className="summary">
               <div>
-                <h2>{plural(result.cabs.length, 'cab')} for {plural(result.total - result.notFound.length, 'person', 'people')}</h2>
-                <p className="sub">{shared} shared, {result.cabs.length - shared} with one pickup</p>
+                <h2>{plural(result.cabs.length, 'cab')} for {plural(result.cabs.reduce((n, c) => n + c.pax, 0), 'person', 'people')}</h2>
+                <p className="sub">{shared} shared, {result.cabs.length - shared} with one stop</p>
               </div>
               <button className="tinted" onClick={copy}>{copied ? 'Copied' : 'Copy for WhatsApp'}</button>
             </div>
@@ -145,10 +156,11 @@ export default function Page() {
                 </div>
               )}
 
-              {(result.notFound.length > 0 || result.skipped.length > 0) && (
+              {(result.notFound.length > 0 || result.skipped.length > 0 || result.manual.length > 0) && (
                 <div className="group issues" role="alert">
                   <p className="issues-head">Not in a cab</p>
                   <ul>
+                    {result.manual.map((p, k) => <li key={`m${k}`}><span>{p.name}, {p.code}</span><span className="why">Manual arrangement</span></li>)}
                     {result.notFound.map((p, k) => <li key={`n${k}`}><span>{p.name}, {p.code}</span><span className="why">Postal code not found</span></li>)}
                     {result.skipped.map((l, k) => <li key={`s${k}`}><span>{l}</span><span className="why">No postal code</span></li>)}
                   </ul>
@@ -161,12 +173,12 @@ export default function Page() {
                     <div className="cab-head">
                       <span className="num" aria-label={`Cab ${k + 1}`}>{k + 1}</span>
                       <span className="pax">{plural(cab.pax, 'person', 'people')}</span>
-                      {cab.stops.length > 1 && <a href={routeUrl(cab.stops[0].code, cab.stops[1].code)} target="_blank" rel="noreferrer">Route</a>}
+                      {cab.stops.length > 1 && <a href={routeUrl(cab.stops)} target="_blank" rel="noreferrer">Route</a>}
                     </div>
                     <ol className="route">
                       {cab.stops.map((s, n) => (
                         <li key={n}>
-                          {n > 0 && <div className="leg">{mins(cab.seconds)} min drive, {(cab.meters / 1000).toFixed(1)} km</div>}
+                          {n > 0 && <div className="leg">{mins(cab.legs[n - 1].seconds)} min drive, {(cab.legs[n - 1].meters / 1000).toFixed(1)} km</div>}
                           <div className="stop">
                             <div className="names">{s.names.join(', ')}</div>
                             <a className="addr" href={mapsUrl(s.code)} target="_blank" rel="noreferrer">{s.address || s.code}</a>
@@ -175,12 +187,14 @@ export default function Page() {
                       ))}
                     </ol>
                     {cab.stops.length === 1 && (
-                      <p className="alone">{cab.pax === 3 ? 'Full cab from one address.' : 'No one else within 15 minutes.'}</p>
+                      <p className="alone">{cab.pax === 4 ? 'Full cab from one address.' : 'One pickup/drop-off point.'}</p>
                     )}
                   </li>
                 ))}
               </ol>
 
+              {result.manual.length > 0 && <p className="foot">Postal codes with more than 4 people need manual arrangement.</p>}
+              <p className="foot usage">Nearby groups are checked to reduce cab count; the fewest possible cabs are not guaranteed.</p>
               <p className="foot usage">
                 Google usage this run: {plural(result.used.lookups, 'postal code lookup')}, {plural(result.used.checks, 'drive-time check')}.
               </p>
