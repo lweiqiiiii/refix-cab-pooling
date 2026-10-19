@@ -86,6 +86,7 @@ export default function Page() {
 
   const stale = result && result.text !== text;
   const shared = result?.cabs.filter((c) => c.stops.length > 1).length ?? 0;
+  const unassigned = result ? result.manual.length + result.notFound.length + result.skipped.length : 0;
 
   return (
     <main>
@@ -110,7 +111,7 @@ export default function Page() {
               </> : 'Rows copied from Excel work too.'}
             </p>
           </div>
-          <p className="foot" id="rules">Up to 4 people per cab, from at most 3 postal codes. Each drive between consecutive stops is at most 10 minutes.</p>
+          <p className="foot" id="rules">Up to <strong>4 people</strong> and <strong>3 stops</strong> per cab.<br />At most <strong>10 minutes</strong> between consecutive stops.</p>
           {parsed.skipped.length > 0 && (!result || stale) && (
             <div className="group issues" role="status">
               <p className="issues-head">Postal code needed</p>
@@ -141,8 +142,8 @@ export default function Page() {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M5 17H3v-5l2-5h14l2 5v5h-2M5 12h16" /><circle cx="7.5" cy="17" r="1.8" /><circle cx="16.5" cy="17" r="1.8" /><path d="M9.3 17h5.4" />
                 </svg>
-                <h2>No cabs yet</h2>
-                <p>Paste names with postal codes, then group them into cabs.</p>
+                <h2>{busy ? 'Finding cab groups…' : 'No cabs yet'}</h2>
+                <p>{busy ? 'Checking postal codes and nearby drive times.' : 'Paste names with postal codes, then group them into cabs.'}</p>
               </div>
             </div>
           )}
@@ -156,23 +157,26 @@ export default function Page() {
                 </div>
               )}
 
-              {(result.notFound.length > 0 || result.skipped.length > 0 || result.manual.length > 0) && (
-                <div className="group issues" role="alert">
-                  <p className="issues-head">Not in a cab</p>
+              {unassigned > 0 && (
+                <details className="group issues" open={result.cabs.length === 0}>
+                  <summary>{plural(unassigned, 'entry', 'entries')} not assigned<span className="issue-hint">Review details</span></summary>
                   <ul>
                     {result.manual.map((p, k) => <li key={`m${k}`}><span>{p.name}, {p.code}</span><span className="why">Manual arrangement</span></li>)}
                     {result.notFound.map((p, k) => <li key={`n${k}`}><span>{p.name}, {p.code}</span><span className="why">Postal code not found</span></li>)}
                     {result.skipped.map((l, k) => <li key={`s${k}`}><span>{l}</span><span className="why">No postal code</span></li>)}
                   </ul>
-                </div>
+                  {result.manual.length > 0 && <p className="issues-help">Postal codes with more than 4 people need manual arrangement.</p>}
+                </details>
               )}
 
               <ol className="cabs">
                 {result.cabs.map((cab, k) => (
-                  <li key={k} className="group cab" style={{ animationDelay: `${Math.min(k, 12) * 40}ms` }}>
+                  <li key={k} className="group cab">
                     <div className="cab-head">
-                      <span className="num" aria-label={`Cab ${k + 1}`}>{k + 1}</span>
-                      <span className="pax">{plural(cab.pax, 'person', 'people')}</span>
+                      <div>
+                        <h3>Cab {k + 1}</h3>
+                        <p className="cab-meta">{plural(cab.pax, 'person', 'people')} · {plural(cab.stops.length, 'stop')}</p>
+                      </div>
                       {cab.stops.length > 1 && <a href={routeUrl(cab.stops)} target="_blank" rel="noreferrer">Route</a>}
                     </div>
                     <ol className="route">
@@ -180,8 +184,11 @@ export default function Page() {
                         <li key={n}>
                           {n > 0 && <div className="leg">{mins(cab.legs[n - 1].seconds)} min drive, {(cab.legs[n - 1].meters / 1000).toFixed(1)} km</div>}
                           <div className="stop">
-                            <div className="names">{s.names.join(', ')}</div>
-                            <a className="addr" href={mapsUrl(s.code)} target="_blank" rel="noreferrer">{s.address || s.code}</a>
+                            <span className="stop-number" aria-hidden="true">{n + 1}</span>
+                            <div className="stop-info">
+                              <div className="names">{s.names.join(', ')}</div>
+                              <a className="addr" href={mapsUrl(s.code)} target="_blank" rel="noreferrer">{s.address || s.code}</a>
+                            </div>
                           </div>
                         </li>
                       ))}
@@ -193,11 +200,11 @@ export default function Page() {
                 ))}
               </ol>
 
-              {result.manual.length > 0 && <p className="foot">Postal codes with more than 4 people need manual arrangement.</p>}
-              <p className="foot usage">Nearby groups are checked to reduce cab count; the fewest possible cabs are not guaranteed.</p>
-              <p className="foot usage">
-                Google usage this run: {plural(result.used.lookups, 'postal code lookup')}, {plural(result.used.checks, 'drive-time check')}.
-              </p>
+              <details className="usage">
+                <summary>Maps usage and grouping limits</summary>
+                <p>Google usage this run: {plural(result.used.lookups, 'postal code lookup')}, {plural(result.used.checks, 'drive-time check')}.</p>
+                <p>Nearby groups are checked to reduce cab count; the fewest possible cabs are not guaranteed.</p>
+              </details>
             </>
           )}
           </div>

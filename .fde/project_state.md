@@ -2,11 +2,11 @@
 
 Project: REFIX Cab Pooling
 Client: REFIX (event manpower company)
-Last Updated: 2026-10-19T16:30:20+08:00
+Last Updated: 2026-10-19T17:41:48+08:00
 
 ## Current Objective
 
-Produce a reviewable refinement design that enforces confirmed grouping rules and prioritizes cab count with bounded runtime and Google API work.
+Deliver a cleaner existing interface with easier-to-read cab groups on laptops and phones, preserving grouping and API limits.
 
 ## Primary Loop
 
@@ -21,11 +21,11 @@ Additional communication skill: caveman (default for FDE OS)
 Caveman cloud routing: off (user preference)
 Engineering skill: ponytail (default for FDE OS; level: full)
 
-Active child skills: Design feasibility, architecture, and validation; Matt Pocock codebase-design; project overview maintenance with Impeccable. Authorized scope is Design, including disposable feasibility checks; application implementation awaits Delivery approval.
+Current work: interface refinement within the approved Delivery stage. Impeccable shape/refinement and Uncodixfy guide presentation; no backward stage transition is proposed. Existing product/workflow context is available from Discovery and A2; do not repeat that interview. User confirmed refining the current appearance for both laptops and phones. A3 presentation changes are implemented in app/page.js and globals.css; backend behavior remains unchanged.
 
 ## Current Status
 
-A2 prototype slice implemented and locally verified. Awaiting user feedback within Delivery. No deployment or Operations transition proposed.
+A3 interface refinement implemented and verified. Ten tests, production compilation, and mocked light/dark responsive state checks pass. Remain in Delivery. The user subsequently authorized uploading A3 source to the existing GitHub repository; deployment is not approved.
 
 ## Highest-Priority Uncertainty
 
@@ -45,11 +45,11 @@ Missing-code flagging and matching-postal-code grouping are confirmed. Parties a
 
 ## Next Action
 
-Present the implemented prototype and validation. User can run the local app and provide workflow feedback; do not deploy or change Google account quotas.
+Collect planner feedback on the refined prototype after the authorized source upload. Do not change backend rules, Google quotas, or deployment.
 
 ## Return Condition
 
-Architecture, grouping objective/proof policy, integration/cost bounds, and validation strategy are concrete enough for Design review; explicit approval is required before Delivery.
+The approved interface direction is implemented and verified on relevant screen sizes, while grouping behavior and API bounds remain intact.
 
 ## Proposed Next Loop
 
@@ -92,3 +92,9 @@ Standalone synthetic spike passes 3-stop, capacity, manual-party exclusion, 600-
 10 automated tests pass; production build passes; mocked desktop/mobile browser checks pass. A 100-location synthetic check used 800 directed elements and preserved all hard rules/party accounting, with about 53 ms local selection. Google Cloud limits were neither inspected nor changed; no live provider calls occurred. Server cache ignores untrusted client known data. Latest stage summary: `03 Delivery/summary.md`. Earlier A1 complete-graph/proof-policy proposals are superseded by the user-authorized bounded prototype build.
 
 Independent completion review found no material issues. Its independent exact solver matched 1,000 seeded eight-stop graphs for cab count, total seconds, and assignment conservation.
+
+## A3 scope confirmation
+
+User requested making the existing screen cleaner and cab groups easier, with full-timers using both laptops and phones. Preserve the warm identity; implement presentation refinement within Delivery. No grouping, Google/API guard, dependency, or deployment changes are part of this task.
+
+A3 verification: light/dark at 320/390/768/1440 pixels, long names/addresses, multiple cabs, keyboard disclosures, usage access, empty/loading/error/manual-only/missing-only states, maps and clipboard. No overflow/page errors; production build and all 10 tests pass. Backend/API/package diff is empty. The user subsequently requested uploading these changes to the existing GitHub repository.

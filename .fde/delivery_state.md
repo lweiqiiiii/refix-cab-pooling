@@ -2,7 +2,7 @@
 
 ## Current Vertical Slice
 
-A2: refine existing cab grouping across pure logic, API, and browser output, with quota settings untouched.
+A2 grouping complete; A3 refines existing interface for laptop/phone readability, with backend and quota settings untouched.
 
 ## Acceptance Criteria
 
@@ -27,3 +27,7 @@ Live API quota/access/provider terms, deployment exposure, operating/cost owner,
 ## Release Status
 
 Local implementation only. Stage remains Delivery; no Operations or deployment approval.
+
+## A3 interface evidence
+
+User selected cleanup of the warm existing design for both device classes. Cab headings and stop numbers, full-width routes, native compact exception disclosure, optional Maps usage, and responsive spacing are implemented. Ten tests, production build, and mocked light/dark browser state checks at 320–1440 pixels pass. Awaiting real planner feedback; changes remain local.

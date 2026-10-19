@@ -38,3 +38,13 @@ A deterministic 100-postal-code synthetic case generated 800 directed candidate 
 ## Not verified
 
 Live Google routing/geocoding, actual account quota and free-tier enforcement, real event acceptance, public access controls, cloud deployment, and current provider retention terms. No paid API calls were used. Nearby selection and bounded optimization deliberately do not guarantee global minimal cab count or globally shortest travel.
+
+## A3 interface refinement verification
+
+Only presentation changed; `git diff --exit-code` confirms no changes to the grouping module, provider route, tests, or package configuration relative to A2.
+
+- All 10 automated tests and production build pass after the interface changes.
+- Focused mocked browser regression passes for missing-code visibility before grouping, explicit cab headings, compact/expandable exceptions, person counts, distinct leg times, all-stop map URL, and clipboard output including exceptions.
+- Light/dark checks at 320, 390, 768, and 1440 pixels pass with long names/addresses and multiple cabs. Screenshots were visually inspected. No horizontal overflow or page errors occurred.
+- Keyboard Enter toggles native exception details. Manual-only output opens details automatically; optional Maps usage remains accessible. Empty, loading, error, and missing-only states pass; no real Google calls were made.
+- Impeccable's mechanical check reports no findings for the changed page/CSS. No new dependencies, live API work, Google quota edits, deployment, or GitHub upload occurred.
