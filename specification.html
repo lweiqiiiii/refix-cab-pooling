@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REFIX Cab Pooling — Specification</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #faf8f5; --surface: #ffffff; --ink: #292524;
+  --secondary: #57534e; --line: #d6d3d1; --accent: #85500f;
+  --soft: #f1ede7;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: var(--ink); background: var(--paper);
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-size: 16px; line-height: 1.65; }
+::selection { background: #ead8bd; color: var(--ink); }
+a { color: var(--accent); text-underline-offset: 4px; overflow-wrap: anywhere; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+[hidden] { display: none !important; }
+.skip-link { position: absolute; top: 8px; left: 16px; transform: translateY(-160%); background: var(--surface); padding: 8px 16px; z-index: 2; }
+.skip-link:focus { transform: none; }
+.page { max-width: 1120px; margin-inline: auto; padding-inline: 32px; }
+header { padding-top: 48px; }
+h1, h2, h3, h4 { line-height: 1.25; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.025em; margin: 0 0 8px; overflow-wrap: anywhere; }
+h2 { font-size: 26px; letter-spacing: -.015em; margin: 0 0 16px; }
+h3 { font-size: 19px; margin: 32px 0 12px; }
+h4 { font-size: 16px; margin: 24px 0 8px; }
+p { margin: 0 0 16px; max-width: 72ch; }
+.subtitle { font-size: 18px; color: var(--secondary); }
+.meta { display: flex; flex-wrap: wrap; gap: 16px 40px; margin: 24px 0 32px; font-size: 14px; }
+dt { color: var(--secondary); }
+dd { margin: 4px 0 0; font-weight: 600; }
+main { padding-top: 32px; }
+.contents { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px; margin: 24px 0 8px; }
+.contents a { padding-block: 8px; }
+section { padding: 32px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 24px; }
+section section { padding: 0; border: 0; margin-top: 32px; }
+.status { font-size: 14px; color: var(--secondary); margin: 0 0 24px; }
+.source { font-size: 14px; color: var(--secondary); margin: 24px 0 0; }
+.table-scroll { overflow-x: auto; margin-block: 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+caption { text-align: left; font-weight: 600; margin-bottom: 12px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; }
+td { color: var(--secondary); }
+ul { margin: 12px 0; padding-left: 24px; }
+li { margin-block: 8px; }
+footer { padding-block: 24px 40px; color: var(--secondary); font-size: 13px; }
+@media (max-width: 640px) {
+  .page { padding-inline: 20px; }
+  header { padding-top: 28px; }
+  main { padding-top: 24px; }
+  .meta { gap: 16px 24px; }
+  .meta > div { flex: 1 1 130px; }
+  h2 { font-size: 23px; }
+  section { padding-block: 28px; }
+  .contents { gap: 4px 20px; }
+}
+@media print {
+  :root { background: #fff; }
+  body { font-size: 10pt; }
+  .page { max-width: none; padding: 0; }
+  header { padding-top: 0; }
+  .skip-link, .contents { display: none; }
+  h2, h3, caption { break-after: avoid; }
+  tr { break-inside: avoid; }
+  section { padding-block: 20px; }
+  .table-scroll { overflow: visible; }
+  a { color: inherit; }
+  @page { margin: 18mm; }
+}
+.document-nav { display: flex; flex-wrap: wrap; gap: 8px 24px; padding-block: 12px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.document-nav a { padding-block: 8px; }
+.document-nav [aria-current] { color: var(--ink); font-weight: 650; text-decoration: none; }
+h3 { margin-top: 28px; }
+@media print { .document-nav { display: none; } }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to document</a>
+<header class="page">
+<h1>REFIX Cab Pooling</h1>
+<p class="subtitle">Specification</p>
+<nav class="document-nav" aria-label="Project documents"><a href="overview.html">Overview</a><a href="specification.html" aria-current="page">Specification</a><a href="Sprint Report/sprint-01.html">Sprint report</a></nav>
+<dl class="meta"><div><dt>Version</dt><dd>Not yet assigned</dd></div><div><dt>Document owner</dt><dd>Not yet assigned</dd></div><div><dt>Review status</dt><dd>Not yet reviewed</dd></div><div><dt>Last evidence review</dt><dd>Not yet available</dd></div></dl>
+<p>Scope, required behavior, acceptance criteria, and the proposed solution. Requirements and commitments remain unconfirmed until supported by project evidence.</p>
+<nav class="contents" aria-label="Document sections"><a href="#purpose">Purpose and outcomes</a><a href="#scope">Scope and boundaries</a><a href="#requirements">Requirements and acceptance</a><a href="#design">Solution and technical design</a><a href="#delivery">Delivery and verification</a><a href="#decisions">Risks and open decisions</a></nav>
+</header>
+<main class="page" id="main" tabindex="-1">
+<!-- Maintainers: replace availability statements with verified facts and source links. Keep stable requirement IDs. Do not invent owners, dates, results, or approvals. Stage Markdown remains authoritative. Do not publish secrets or internal approval quotations. -->
+<section id="purpose">
+<h2>Purpose and outcomes</h2>
+<h3>Problem and users</h3><p>The affected users, current workflow, and business impact have not yet been confirmed.</p>
+<h3>Intended outcome</h3><p>Target outcomes, baseline measures, and success thresholds are awaiting agreement.</p>
+<p class="source">Sources: <a href="01 Discovery/summary.md">Discovery findings</a> · <a href="01 Discovery/requirements.md">Requirements</a></p>
+</section>
+<section id="scope">
+<h2>Scope and boundaries</h2>
+<h3>Included</h3><p>No scope commitments have been agreed yet.</p>
+<h3>Excluded or deferred</h3><p>Explicit exclusions, trade-offs, and deferred work remain to be confirmed.</p>
+<h3>Assumptions and dependencies</h3><p>External systems, access, data availability, and delivery dependencies have not yet been assessed.</p>
+<p class="source">Sources: <a href="01 Discovery/scope.md">Scope</a> · <a href="01 Discovery/coverage.md">Discovery coverage</a></p>
+</section>
+<section id="requirements">
+<h2>Requirements and acceptance</h2>
+<p>Each confirmed requirement needs a stable ID, priority, observable acceptance condition, and source. Acceptance conditions should identify the precondition, action, and expected result.</p>
+<!-- Row format: REQ-001 | required behavior | agreed priority | Given … When … Then … | source link. Link sprint work and validation evidence to these IDs. -->
+<div class="table-scroll" role="region" aria-label="Functional requirements" tabindex="0"><table>
+<caption>Functional requirements</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">Requirement</th><th scope="col">Priority</th><th scope="col">Acceptance criterion</th><th scope="col">Source</th></tr></thead>
+<tbody><tr><td colspan="5">No validated functional requirements recorded yet.</td></tr></tbody>
+</table></div>
+<h3>Business rules and exceptions</h3><p>Decision rules, permissions, invalid inputs, failure behavior, and recovery paths are awaiting definition.</p>
+<div class="table-scroll" role="region" aria-label="Quality and operating constraints" tabindex="0"><table>
+<caption>Quality and operating constraints</caption>
+<thead><tr><th scope="col">Area</th><th scope="col">Constraint or target</th><th scope="col">Verification</th><th scope="col">Source</th></tr></thead>
+<tbody><tr><td colspan="4">Accessibility, performance, reliability, security, privacy, and compatibility constraints have not yet been agreed.</td></tr></tbody>
+</table></div>
+<p class="source">Sources: <a href="01 Discovery/requirements.md">Requirements and acceptance criteria</a> · <a href="01 Discovery/coverage.md">Constraints and open questions</a></p>
+</section>
+<section id="design">
+<h2>Solution and technical design</h2>
+<h3>User journey</h3><p>Roles, workflow steps, inputs, outputs, and exception paths have not yet been defined.</p>
+<h3>System boundaries and components</h3><p>Component responsibilities, integration boundaries, and project-specific architecture diagrams are not yet available.</p>
+<h3>Interfaces and data</h3><p>API contracts, data ownership, storage, validation, migrations, and external failure handling are awaiting design.</p>
+<h3>Security and operation</h3><p>Identity, authorization, sensitive data handling, deployment, observability, recovery, and rollback arrangements have not yet been specified.</p>
+<p class="source">Sources: <a href="02 Design/architecture.md">Architecture</a> · <a href="02 Design/decisions.md">Design decisions</a></p>
+</section>
+<section id="delivery">
+<h2>Delivery and verification</h2>
+<div class="table-scroll" role="region" aria-label="Milestones and dependencies" tabindex="0"><table>
+<caption>Milestones and dependencies</caption>
+<thead><tr><th scope="col">Milestone</th><th scope="col">Requirement IDs</th><th scope="col">Owner</th><th scope="col">Target date</th><th scope="col">Dependency / status</th></tr></thead>
+<tbody><tr><td colspan="5">No milestones, owners, or dates agreed yet.</td></tr></tbody>
+</table></div>
+<h3>Acceptance and release approach</h3><p>Required checks, evidence, reviewers, release conditions, and rollback criteria have not yet been agreed.</p>
+<p class="source">Sources: <a href="02 Design/timeline.md">Timeline</a> · <a href="03 Delivery/validation.md">Validation</a> · <a href="03 Delivery/release.md">Release</a></p>
+</section>
+<section id="decisions">
+<h2>Risks and open decisions</h2>
+<div class="table-scroll" role="region" aria-label="Decisions requiring review" tabindex="0"><table>
+<caption>Decisions requiring review</caption>
+<thead><tr><th scope="col">Question or risk</th><th scope="col">Impact</th><th scope="col">Proposed response</th><th scope="col">Owner</th><th scope="col">Decision needed by</th></tr></thead>
+<tbody><tr><td colspan="5">No assessed risks or decision owners recorded yet.</td></tr></tbody>
+</table></div>
+<h3>Review and change record</h3><p>This specification has not yet been reviewed. Approval status and approved scope must be confirmed from recorded evidence.</p>
+<div class="table-scroll" role="region" aria-label="Specification revisions" tabindex="0"><table>
+<caption>Specification revisions</caption>
+<thead><tr><th scope="col">Version / date</th><th scope="col">Change and affected requirement IDs</th><th scope="col">Review status</th><th scope="col">Source</th></tr></thead>
+<tbody><tr><td colspan="4">No revisions or reviews recorded yet.</td></tr></tbody>
+</table></div>
+<p class="source">Sources: <a href="02 Design/decisions.md">Decisions</a> · <a href="01 Discovery/scope.md">Scope boundaries</a></p>
+</section>
+</main>
+<footer class="page">Prepared for project review. Unconfirmed items remain open; this document does not imply approval or completion.</footer>
+</body>
+</html>

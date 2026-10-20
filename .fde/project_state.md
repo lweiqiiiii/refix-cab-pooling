@@ -2,11 +2,11 @@
 
 Project: REFIX Cab Pooling
 Client: REFIX (event manpower company)
-Last Updated: 2026-10-20T01:35:29+08:00
+Last Updated: 2026-10-20T12:59:41+08:00
 
 ## Current Objective
 
-Apply selected option A to the working app while preserving grouping and current 12/18-minute total budgets.
+Resume approved Delivery, verify the current prototype against its client guide, and obtain representative planner feedback.
 
 ## Primary Loop
 
@@ -25,7 +25,7 @@ Current work: time-budget refinement within Delivery. Pure grouping and the exis
 
 ## Current Status
 
-A5 implemented and locally verified: 11 tests and production build pass. The user clarified the 18-minute total for three stops and 12-minute two-stop maximum. No new upload or deployment has been performed. Remain in Delivery.
+FDE resumed on 2026-10-20 at 8aa3129. User guide completed and synchronized; five mocked guide workflows, offline document checks, 11 tests and production build pass. No app changes, upload, deployment, or stage transition.
 
 ## Highest-Priority Uncertainty
 
@@ -45,7 +45,7 @@ Missing-code flagging and matching-postal-code grouping are confirmed. Parties a
 
 ## Next Action
 
-Present the updated local rules and verification for planner feedback. Source publication requires an upload request for this new revision.
+A REFIX planner reviews one representative assignment using `03 Delivery/user-guide.html`; capture feedback within Delivery. Live provider/quota checks need the account owner and remain unverified.
 
 ## Return Condition
 
@@ -122,3 +122,11 @@ User requested Impeccable refinement and aligned boxes. Shared desktop heading r
 ## GitHub source upload — 2026-10-20
 
 User explicitly requested “upload to github”. Release includes current 12/18-minute route budgets, selected warm workspace, box alignment and removal of Ahmad Ali from the placeholder. Eleven tests, production build and diff whitespace check passed immediately before upload. Source upload targets the existing origin/main; deployment and live Google validation remain outside this release. Earlier “not uploaded” entries describe their historical checkpoints.
+
+## FDE resumption — 2026-10-20
+
+Initializer ran without overwrite. Existing A2 Delivery approval remains authoritative; no pending transition was found. i-have-adhd, caveman and ponytail full loaded; cloud routing remains off. Current controller requires guide regression on Delivery resumption: completed Markdown/HTML guide, mapped five tasks to requirements and executed local tests/browser replay. Current sprint remains draft 01 with unknown sprint targets, cadence and prices. Overview refreshed. No new external action authorized. Local page/favicon 404 and report-copy detector warning documented; no product defect found in tested workflows. Next primary uncertainty is planner acceptance and live provider/quota behavior; remain in Delivery.
+
+## Documentation source upload request — 2026-10-20
+
+User explicitly requested “upload to github” after the FDE resumption. Authorizes committing and pushing the current FDE state, completed user guide, validation evidence, overview, sprint draft, and initializer-created specification scaffold to existing origin/main. Specification remains an unpopulated draft; sprint dates and commercial terms remain unknown. Application revision 8aa3129 is unchanged. No deployment or stage transition is requested.

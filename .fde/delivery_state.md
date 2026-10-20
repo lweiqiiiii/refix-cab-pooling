@@ -43,3 +43,11 @@ Supersedes the per-leg rule: two-stop cabs have a 720-second total budget; three
 ## GitHub source upload — 2026-10-20
 
 User explicitly requested “upload to github”. Release includes current 12/18-minute route budgets, selected warm workspace, box alignment and removal of Ahmad Ali from the placeholder. Eleven tests, production build and diff whitespace check passed immediately before upload. Source upload targets the existing origin/main; deployment and live Google validation remain outside this release. Earlier “not uploaded” entries describe their historical checkpoints.
+
+## Current resumption evidence — 2026-10-20 (supersedes historical status above)
+
+Revision 8aa3129. Current rules: four people, three stops, 720-second two-stop / 1080-second three-stop totals; venue excluded and same-code parties intact. Eleven tests, production build, five-task guide-driven mocked Chromium replay, and standalone document verification pass. Client guide Markdown/HTML completed. Planner acceptance and live provider/quota evidence remain open. No new upload, deployment, Operations, or handover action. Sprint 01 draft resumed with commercial/reporting terms unknown.
+
+## Documentation source upload request — 2026-10-20
+
+User explicitly requested “upload to github” after the FDE resumption. Authorizes committing and pushing the current FDE state, completed user guide, validation evidence, overview, sprint draft, and initializer-created specification scaffold to existing origin/main. Specification remains an unpopulated draft; sprint dates and commercial terms remain unknown. Application revision 8aa3129 is unchanged. No deployment or stage transition is requested.

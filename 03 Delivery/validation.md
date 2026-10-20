@@ -64,3 +64,35 @@ User selected A. The working app now uses its warm split layout on laptops and s
 ## A8 — box alignment
 
 User requested Impeccable refinement and aligned boxes. Shared desktop heading rows now align the staff-input box with the results area, including empty and populated states; responsive stacking is preserved. Single-stop notes align with passenger names. Browser geometry checks passed in light/dark mode; 320/390/768/1440-pixel state checks passed without overflow or page errors. Impeccable mechanical detection returned no findings. Google was mocked; no upload or deployment.
+
+## FDE resumption — 2026-10-20 / candidate 8aa3129
+
+Objective: resume approved Delivery and replace the new user-guide scaffold with instructions verified against the existing app. No app/API code changed, no stage transition proposed. FDE testing_strategy.md and e2e_testing.md selected the existing public grouping/POST tests plus guide-linked UI replay. Matt Pocock TDD was loaded and applied as public-interface testing guidance; existing tests were rerun, no new implementation or red/green cycle was needed. Playwright skill loaded; CLI open/snapshot confirmed visible controls. Existing cached Playwright/Chromium tooling then executed the broader scripted replay. Impeccable was applied to preserve the incumbent document presentation; Uncodixfy and verification-before-completion were consulted.
+
+### Cases recorded before execution
+
+All G cases: planner role (no sign-in UI), local dev server at 127.0.0.1:3011, synthetic names and 910001–910005 codes. POST responses are intercepted; no Google calls occur. Clipboard success/denial is simulated; external URLs are inspected without opening them. Source revision 8aa3129, guide revision 2026-10-20.
+
+| Case / requirement coverage | HTML task | Steps and expected visible result | Actual / status |
+|---|---|---|---|
+| G1 access and device layout | open-planner | Open local URL; find Staff list, labelled textarea and No cabs yet; compare phone/laptop layouts. | Pass: Chromium, 390/1440px; no overflow or page errors. |
+| G2 input/missing-code visibility, code normalization, names privacy | group-staff | Paste two people at A, one at B and C, five at D, one unknown E, and one area-only line. Expect warning before submit, loading, one cab/four assigned. Repeat Excel/five-digit and missing-only input. | Pass: warning and disabled missing-only action, 4 assigned; POST contains only codes/counts; five-digit input becomes six digits. |
+| G3 capacity, stop accounting, manual/unresolved visibility and usage | review-groups | Open exceptions and usage. Expect five manual, one unresolved, one missing; 3 ordered stops, 8/6-minute legs and 14-minute total. Repeat five-person manual-only result. | Pass: exact counts and times; no-cab exception details auto-open. Rules independently checked in Node tests. |
+| G4 all-stop Maps and copying with exceptions | share-assignments | Inspect Route and address links; copy into simulated draft; deny clipboard and follow documented recovery. | Pass: origin/waypoint/destination ordered, new-tab target; Copied shown; all stops/exception types in draft. Denial displays recovery; assignments selectable. Actual OS manual copy, external Maps loading and message sending not tested. |
+| G5 edit and error recovery | retry-grouping | Edit list, find changed notice, Group again; inject Google 502, max-code 400, missing-key 500 then retry. | Pass: stale notice clears, failures preserve input and show errors, each subsequent mocked retry succeeds. Account/key correction itself is simulated, not live. |
+| D1 source/render parity and attachment usability | all five anchors | Compare every instruction, prerequisite, result and task ID with Markdown; open documents offline at 390/1440; print; navigate overview. | Pass: five tasks match; no overflow; guide print, overview audience tabs/architecture selector, all-slide print and no-JavaScript fallback pass. Sprint progress remains unassessed. |
+
+Requirement references: current business rules and acceptance examples in `01 Discovery/requirements.md`; latest A5 time budgets and A7/A8 interface changes in this validation record. Input/household/capacity/venue/search/API requirements without independent user actions are covered by the 11 existing tests through `lib/group.mjs` and `POST /api/group`. Inclusive 720/1080-second acceptance and 721/1081-second rejection are included. This mapping does not establish live-provider or real-user coverage.
+
+### Executed evidence
+
+- `npm test`: 11 passed, zero failures. Covers grouping rules, parties, directions, search counterexamples, candidate bounds, API validation, cache and incomplete-provider failure behavior.
+- `npm run build`: exit 0; / and /api/group compile. Existing parent-directory lockfile warning persists.
+- `node /private/tmp/refix-guide-check.cjs`: exit 0, G1–G5 pass. `node /private/tmp/refix-doc-check.cjs`: exit 0, D1 pass. Temporary drivers and screenshots are local inspection artifacts, not shipped app dependencies. Phone app and guide screenshots visually inspected.
+- Initial replay attempts stopped on two harness locator errors: Next.js adds a second alert, and the changed notice contains button text. Narrowing to `.error[role=alert]` and `.notice` resolved both; complete replay then passed. No product defect or source fix was needed.
+- CLI console recorded a missing `/favicon.ico` (404), a nonblocking existing asset gap; not a grouping failure. Scripted replay found zero uncaught page errors and zero external requests.
+- Impeccable detector found one report-copy cadence warning, no findings for overview/guide. Existing report wording was preserved; no visual redesign was attempted.
+
+### Remaining gaps / completion status
+
+No defects found in the tested workflows. The former empty guide is now populated and matched to the app. All three required local passes ran; the Matt pass reused existing tests rather than claiming new TDD work. These are agent-executed checks, not observed planner acceptance. Live Google/quota/provider terms, deployed security/access, real-event outcome, external Maps loading, actual clipboard permissions, and support/cost ownership remain unverified. Owner: project owner to identify the relevant planner and Google account owner; next action: review one representative assignment before arranging live validation. No deferral, deployment, handover, or Delivery-to-Operations transition is approved.

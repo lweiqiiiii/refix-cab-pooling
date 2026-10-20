@@ -51,3 +51,9 @@ User requested Impeccable refinement and aligned boxes. Shared desktop heading r
 ## GitHub source upload — 2026-10-20
 
 User explicitly requested “upload to github”. Release includes current 12/18-minute route budgets, selected warm workspace, box alignment and removal of Ahmad Ali from the placeholder. Eleven tests, production build and diff whitespace check passed immediately before upload. Source upload targets the existing origin/main; deployment and live Google validation remain outside this release. Earlier “not uploaded” entries describe their historical checkpoints.
+
+## FDE resumption — 2026-10-20
+
+Candidate 8aa3129 remains in approved Delivery. The new mandatory user-guide scaffolds were completed from actual UI labels and synchronized into a standalone HTML attachment. All five workflows passed guide-driven Chromium replay with synthetic responses, including error recovery at 390/1440px. Eleven existing public-interface tests and production build passed. Guide/source parity, offline document layout, overview navigation/print/no-JavaScript and unassessed sprint progress checks passed. No product code change was needed. See validation.md for cases, coverage and harness retests.
+
+The current sprint-01 draft was populated from existing evidence without inventing dates, targets, prices or completed sprints. Overview and state were refreshed. Planner acceptance, live Google/quota checks, deployed access and support/cost ownership remain open. Existing missing favicon and one report-copy style warning are nonblocking observations. Delivery is not complete; no transition, deployment, new upload or handover is proposed. Next: REFIX planner reviews representative assignments using user-guide.html.

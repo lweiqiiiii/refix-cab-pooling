@@ -168,8 +168,8 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 <div class="view-heading"><h2>Client overview</h2><p>Outcomes, commitments, and next steps</p></div>
 <dl class="meta">
 <div><dt>Current stage</dt><dd>Delivery</dd></div>
-<div><dt>Review status</dt><dd>Prototype A5 locally verified; awaiting user feedback</dd></div>
-<div><dt>Last verified update</dt><dd>2026-10-20 — time-budget tests and build; prior responsive review</dd></div>
+<div><dt>Review status</dt><dd>Prototype 8aa3129; guide review resumed; awaiting planner feedback</dd></div>
+<div><dt>Last verified update</dt><dd>2026-10-20 — 11 tests and production build; guide-driven local regression</dd></div>
 </dl>
 <div class="brief">
 <h3>At a glance</h3>
@@ -211,7 +211,7 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 <p class="status">A2 implemented; local validation passed</p>
 <div class="grid"><div><h3>What is ready</h3><p>Four passengers, three ordered stops, intact parties, and complete map/clipboard output are implemented. Cab headings, numbered stops, compact warnings, and responsive spacing improve the existing warm interface. Eleven current-rule tests and production build pass; prior mocked light/dark checks cover 320–1440 pixels.</p></div><div><h3>What remains</h3><p>Real planner acceptance, live provider/quota behavior, retention terms, access, and operating ownership remain unverified. Nearby pruning and bounded selection cannot guarantee the global fewest cabs.</p></div></div>
 <h3>Interface options for review</h3><p>Three read-only layouts use synthetic data: warm workspace, cab board, and compact transport list. Compare them locally at <a href="http://127.0.0.1:3011/prototype/design?variant=A">the design preview</a> after starting the development server on port 3011. Option A was selected and applied to the working planner: warm split workspace on laptops, stacked on phones. Input and result boxes now share a desktop alignment row; light/dark responsive browser and geometry checks passed. Grouping and API quota guards remain unchanged. Eleven tests, production build and mocked light/dark browser checks passed. <a href="03 Delivery/design-options.md">Screenshots, instructions and verification</a>.</p>
-<h3>Prototype walkthrough</h3><p>Run the existing app locally, paste names and postal codes, select <strong>Group into cabs</strong>, review ordered stops and the <strong>entries not assigned</strong> disclosure, then use <strong>Route</strong> or <strong>Copy for WhatsApp</strong>. Unassigned counts remain visible; details open automatically when no cab is assigned. Browser verification used synthetic responses; there is no hosted release from this delivery.</p>
+<h3>Prototype walkthrough</h3><p><a href="03 Delivery/user-guide.html">User guide</a> covers access, grouping, exception review, routes, copying, and recovery. <a href="Sprint Report/sprint-01.html">Sprint 01 draft report</a> summarizes available evidence; sprint dates, targets, and commercial terms remain to be agreed.</p><p>Run the existing app locally, paste names and postal codes, select <strong>Group into cabs</strong>, review ordered stops and the <strong>entries not assigned</strong> disclosure, then use <strong>Route</strong> or <strong>Copy for WhatsApp</strong>. Unassigned counts remain visible; details open automatically when no cab is assigned. Browser verification used synthetic responses; there is no hosted release from this delivery.</p>
 <p class="source">Supporting documents: <a href="03 Delivery/prototype.md">Walkthrough</a> · <a href="03 Delivery/validation.md">Validation results</a> · <a href="03 Delivery/summary.md">Delivery summary</a> · <a href="03 Delivery/interface-refinement.md">Interface refinement</a></p>
 </section>
 <section id="operations">
@@ -269,7 +269,7 @@ body.presentation { height: 100dvh; display: flex; flex-direction: column; overf
 </section>
 </div>
 </main>
-<footer class="page">Local prototype A5 is ready for user review. Live Google quotas, deployment, and operational readiness remain unverified; the current stage is Delivery.</footer>
+<footer class="page">Local prototype 8aa3129 is ready for planner review. Live Google quotas, deployment, and operational readiness remain unverified; the current stage is Delivery.</footer>
 <script>
 (() => {
   const navigation = document.querySelector('.tabs, .audiences');

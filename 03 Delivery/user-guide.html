@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REFIX Cab Pooling — User guide</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #ffffff; --surface: #ffffff; --ink: #292524;
+  --secondary: #57534e; --line: #d6d3d1; --accent: #85500f;
+  --soft: #f5f5f5;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: var(--ink); background: var(--paper);
+}
+* { box-sizing: border-box; }
+body { background: #ffffff; margin: 0; font-size: 16px; line-height: 1.65; }
+::selection { background: #ead8bd; color: var(--ink); }
+a { color: var(--accent); text-underline-offset: 4px; overflow-wrap: anywhere; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+[hidden] { display: none !important; }
+.skip-link { position: absolute; top: 8px; left: 16px; transform: translateY(-160%); background: var(--surface); padding: 8px 16px; z-index: 2; }
+.skip-link:focus { transform: none; }
+.page { max-width: 1120px; margin-inline: auto; padding-inline: 32px; }
+header { padding-top: 48px; }
+h1, h2, h3, h4 { line-height: 1.25; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.025em; margin: 0 0 8px; overflow-wrap: anywhere; }
+h2 { font-size: 26px; letter-spacing: -.015em; margin: 0 0 16px; }
+h3 { font-size: 19px; margin: 32px 0 12px; }
+h4 { font-size: 16px; margin: 24px 0 8px; }
+p { margin: 0 0 16px; max-width: 72ch; }
+.subtitle { font-size: 18px; color: var(--secondary); }
+.meta { display: flex; flex-wrap: wrap; gap: 16px 40px; margin: 24px 0 32px; font-size: 14px; }
+dt { color: var(--secondary); }
+dd { margin: 4px 0 0; font-weight: 600; }
+main { padding-top: 32px; }
+.contents { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px; margin: 24px 0 8px; }
+.contents a { padding-block: 8px; }
+section { padding: 32px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 24px; }
+section section { padding: 0; border: 0; margin-top: 32px; }
+.status { font-size: 14px; color: var(--secondary); margin: 0 0 24px; }
+.source { font-size: 14px; color: var(--secondary); margin: 24px 0 0; }
+.table-scroll { overflow-x: auto; margin-block: 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+caption { text-align: left; font-weight: 600; margin-bottom: 12px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; }
+td { color: var(--secondary); }
+ul { margin: 12px 0; padding-left: 24px; }
+li { margin-block: 8px; }
+footer { padding-block: 24px 40px; color: var(--secondary); font-size: 13px; }
+@media (max-width: 640px) {
+  .page { padding-inline: 20px; }
+  header { padding-top: 28px; }
+  main { padding-top: 24px; }
+  .meta { gap: 16px 24px; }
+  .meta > div { flex: 1 1 130px; }
+  h2 { font-size: 23px; }
+  section { padding-block: 28px; }
+  .contents { gap: 4px 20px; }
+}
+@media print {
+  :root { background: #fff; }
+  body { font-size: 10pt; }
+  .page { max-width: none; padding: 0; }
+  header { padding-top: 0; }
+  .skip-link, .contents { display: none; }
+  h2, h3, caption { break-after: avoid; }
+  tr { break-inside: avoid; }
+  section { padding-block: 20px; }
+  .table-scroll { overflow: visible; }
+  a { color: inherit; }
+  @page { margin: 18mm; }
+}
+h3 { margin-top: 28px; }
+
+
+article { margin-top: 28px; }
+article h3 { overflow-wrap: anywhere; }
+ol { padding-left: 24px; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to user guide</a>
+<header class="page">
+<h1>REFIX Cab Pooling</h1>
+<p class="subtitle">User guide</p>
+<dl class="meta">
+<div><dt>Client</dt><dd>REFIX (event manpower company)</dd></div>
+<div><dt>Application version</dt><dd>8aa3129</dd></div>
+<div><dt>Last verified</dt><dd>2026-10-20</dd></div>
+<div><dt>Guide status</dt><dd>Local prototype — simulated Maps verification</dd></div>
+</dl>
+<p>Version covered: 8aa3129. Verification date: 2026-10-20. Local prototype; browser checks use simulated Maps responses. Live Google access and planner acceptance remain unverified.</p>
+<nav class="contents" aria-label="User guide sections"><a href="#about">About the application</a><a href="#getting-started">Getting started</a><a href="#tasks">Main tasks</a><a href="#troubleshooting">Troubleshooting</a><a href="#limitations">Known limitations</a><a href="#support">Get help</a></nav>
+</header>
+<main class="page" id="main" tabindex="-1">
+<!-- Maintainers: publish verified instructions from user-guide.md. Preserve stable task IDs and the tested application revision/date. Each task needs prerequisites/role, exact steps, expected visible results, and safe recovery. Repeat an article with its task ID as the HTML id. Replace draft statements only with verified facts. Embed necessary assets and exclude credentials/internal test notes. -->
+<section id="about"><h2>About the application</h2><p>For REFIX staff arranging event transport on laptops and phones. Paste staff names and postal codes, review cab groups and exceptions, and copy assignments.</p></section>
+<section id="getting-started"><h2>Getting started</h2><p>A maintainer must install the existing dependencies and configure server-side Google access before real grouping. See Open the planner below. No hosted URL or sign-in is provided.</p></section>
+<section id="tasks"><h2>Complete your main tasks</h2><article id="open-planner"><h3>Open the planner</h3><p><strong>Before you start:</strong> A maintainer must run the app and configure Google before real grouping. No sign-in screen is provided; public access is not approved.</p><ol><li>For local use, run npm run dev -- --hostname 127.0.0.1 --port 3011 from the project folder after the maintainer completes setup.</li><li>Open http://127.0.0.1:3011 on that computer. This address cannot be opened from a different phone or computer.</li><li>Check that Staff list, Names and postal codes, and No cabs yet appear. Phones show results below the list; laptops show them alongside it.</li></ol><p><strong>Result and recovery:</strong> If the page does not open, ask the maintainer to check the server and printed address. No hosted address is confirmed.</p></article><article id="group-staff"><h3>Prepare and group staff</h3><p><strong>Before you start:</strong> Open the planner. Obtain a name and Singapore postal code per passenger. Real grouping may consume Google allowance; the account owner must confirm quotas first.</p><ol><li>Paste one person per line into Names and postal codes, for example Example A, 910001 and Example B, 910002. These are format examples, not verified locations. Excel rows work; five-digit codes gain a leading zero.</li><li>Check the person count. Correct every Postal code needed row. Area names alone cannot establish a stop; blank lines are ignored.</li><li>Select Group into cabs. The button shows Grouping… while working. With no recognized postal codes, the button is disabled.</li><li>Check the cab and assigned-person heading. Review exceptions before using assignments.</li></ol><p><strong>Result and recovery:</strong> Edit incorrect lines and group again. People sharing a postal code stay together. Parties above four require manual arrangement without automatic splitting.</p></article><article id="review-groups"><h3>Review assignments and exceptions</h3><p><strong>Before you start:</strong> Complete a grouping run.</p><ol><li>Read each Cab heading, passenger count, numbered stops, individual drive times, and total time.</li><li>Open entries not assigned when present (entry not assigned for one entry). Review Manual arrangement, Postal code not found, and No postal code. Details open automatically when no cabs are assigned.</li><li>Correct missing or unrecognized postal codes in the list and group again. Arrange parties above four manually; do not change their code to force assignment.</li><li>Open Maps usage and grouping limits to see postal-code lookups and drive-time checks this run.</li></ol><p><strong>Result and recovery:</strong> Every passenger must be accounted for in a cab or an exception you will resolve manually. Each cab allows four people and three home stops. Two stops allow 12 minutes total; three allow 18 minutes total. Venue travel is excluded. Rounded minute labels are for display; limits use seconds. Nearby search does not guarantee the fewest cabs.</p></article><article id="share-assignments"><h3>Inspect routes and copy assignments</h3><p><strong>Before you start:</strong> Review current results and resolve or account for exceptions.</p><ol><li>Use Route on a multi-stop cab to open ordered stops in Google Maps. Use a stop address link to inspect that location. Links open a new tab and share postal codes with Google; they do not book transport.</li><li>Return to the planner and select Copy for WhatsApp.</li><li>Check that the button says Copied. Paste into a draft and inspect names, all stops, and the Not assigned section before sending. The planner does not send messages.</li></ol><p><strong>Result and recovery:</strong> If copying fails, allow clipboard access or select and copy assignments manually. Preserve exceptions when sharing. Route loading inside Google Maps and WhatsApp message delivery are outside this prototype’s verification.</p></article><article id="retry-grouping"><h3>Change a list or retry a failed run</h3><p><strong>Before you start:</strong> Retain the staff list until planning is complete. There is no saved history.</p><ol><li>After editing a grouped list, check for The list has changed since this grouping.</li><li>Select Group again and wait for updated results before copying. Earlier results may remain visible after edits.</li><li>If grouping displays an error, keep the list and read the message. For Google failures, ask the maintainer to check quota and connection, then select Group into cabs again. For too many codes, reduce the run to at most 100 distinct postal codes; splitting runs may increase cab count.</li><li>For a missing API-key message, ask the maintainer to configure the server. Never paste keys into the staff list.</li></ol><p><strong>Result and recovery:</strong> Updated assignments replace earlier results and clear the changed-list notice. A failed run does not assign passengers. Do not repeatedly retry provider errors without checking the cause; requests may consume allowance.</p></article></section>
+<section id="troubleshooting"><h2>Troubleshooting</h2><p>Follow Change a list or retry a failed run for grouping errors. For copy errors, allow clipboard access or select assignments manually. Missing postal codes must be supplied; unresolved codes must be corrected. Parties above four need manual arrangement.</p></section>
+<section id="limitations"><h2>Known limitations</h2><ul><li>No cab booking, message sending, saved history, hosted release, or verified public-access controls.</li><li>Live Google responses, account quotas, provider terms, and real-event acceptance remain unverified. Usage counters do not guarantee free use.</li></ul></section>
+<section id="support"><h2>Get help</h2><p>Support contact and availability: to be confirmed with the project owner. Report the task, time, and exact error; omit staff lists, credentials, and sensitive information.</p></section>
+</main>
+<footer class="page">Local prototype guide. Live provider verification, planner acceptance, and support arrangements remain open.</footer>
+</body>
+</html>

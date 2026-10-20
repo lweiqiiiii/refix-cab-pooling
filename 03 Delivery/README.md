@@ -9,3 +9,5 @@ Place new application code, tests, and build configuration in this folder. Docum
 Before handover, fill relevant documents, identify unfinished placeholders, and verify that selected folders include their required dependencies. Link any additional folders the client needs.
 
 The project’s visual guide is [overview.html](../overview.html). The agent updates it from stage documents after material changes and before approval reviews. Include it alongside the selected folders at handover.
+
+Client instructions: [User guide](user-guide.html), maintained from [Markdown source](user-guide.md). Guide regression evidence is in [validation](validation.md).
