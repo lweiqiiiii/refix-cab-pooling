@@ -95,7 +95,6 @@ export default function Page() {
         <span className="header-label">Cab pooling</span>
       </header>
       <div className="intro">
-        <h1>A smoother way home.</h1>
         <p className="sub">Paste the list. Review the groups. Send them on their way.</p>
       </div>
       <p className="route-rules">4 passengers / cab · 2 stops ≤ 12 min · 3 stops ≤ 18 min · Venue excluded</p>
